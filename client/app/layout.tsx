@@ -14,7 +14,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Rizz Your Alpha",
+  title: "Rizzlr.ai",
   description: "Do you have what it takes?",
 };
 
