@@ -1,4 +1,5 @@
 import Hero from "@/components/Hero";
+import App from "../components/App";
 
 export default function Home() {
   return (
@@ -6,6 +7,7 @@ export default function Home() {
       <div className="max-w-7xl w-full">
         <h1>Rizz Your Alpha</h1>
         <Hero />
+        <App />
       </div>
     </main>
   );
