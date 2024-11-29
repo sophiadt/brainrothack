@@ -12,3 +12,5 @@ npm install
 ```shell
 npm run dev
 ```
+
+alpha skibidi rizz
