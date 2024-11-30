@@ -19,7 +19,7 @@ export default function Home() {
 
           {/* Main text and image container with flex layout */}
           <div
-            className="rounded-lg p-6 mb-6 w-full max-w-2xl"
+            className="relative rounded-lg p-6 mb-6 w-full max-w-2xl"
             style={{
               height: "400px",
               background: "linear-gradient(to right, #25262A, #43454C, #7F8290)",
@@ -51,11 +51,11 @@ export default function Home() {
               </div>
 
               {/* Giga Chad Image */}
-              <div className="ml-auto" style={{ width: "600px", height: "350px" }}>
+              <div className="absolute bottom-0 right-0">
                 <img
                   src="/assets/giga-chad-hero.png"
                   alt="Giga Chad Hero"
-                  className="w-full h-full object-cover"
+                  className="w-[15em] h-[15em] object-cover" // Adjust width and height as needed
                 />
               </div>
             </div>
