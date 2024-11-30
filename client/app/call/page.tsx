@@ -7,7 +7,10 @@ export default function CallPage() {
         <button className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-full">
           Hang Up
         </button>
-        <button className="bg-purple-500 hover:bg-purple-400 text-white px-6 py-3 rounded-full">
+        <button
+          style={{ backgroundColor: "#BE4DFD" }}
+          className="hover:opacity-90 text-white px-6 py-3 rounded-full"
+        >
           See Analysis
         </button>
       </div>

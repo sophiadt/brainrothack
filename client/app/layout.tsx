@@ -2,15 +2,35 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const poppins = localFont({
+  src: [
+    {
+      path: "./fonts/Poppins-Regular.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Poppins-Italic.ttf",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "./fonts/Poppins-Medium.ttf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Poppins-SemiBold.ttf",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Poppins-Bold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-poppins",
 });
 
 export const metadata: Metadata = {
@@ -26,23 +46,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${poppins.variable} antialiased`}
       >
         <header className="bg-gray-900 text-white p-4">
           <div className="max-w-7xl mx-auto flex justify-between items-center">
-            <h1 className="text-lg font-bold">Rizzlr.ai</h1>
+            <h1
+              className="text-lg font-bold bg-gradient-to-r from-[#7D36E5] to-[#BE4DFD] bg-clip-text text-transparent"
+            >
+              Rizzlr.ai
+            </h1>
             <nav className="flex space-x-6">
-              <a href="/" className="hover:text-purple-400">
-                Home
-              </a>
-              <a href="/call" className="hover:text-purple-400">
-                Call
-              </a>
               <a href="/profile" className="hover:text-purple-400">
-                Profile
+                Search
               </a>
             </nav>
-            <button className="bg-purple-500 text-sm px-4 py-2 rounded-full">
+            <button className="bg-[#BE4DFD] text-sm px-4 py-2 rounded-full">
               0 Aura Points
             </button>
           </div>
@@ -54,3 +72,4 @@ export default function RootLayout({
     </html>
   );
 }
+
