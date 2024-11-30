@@ -45,14 +45,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${poppins.variable} antialiased`}
-      >
-        <header className="bg-gray-900 text-white p-4">
+      <body className={`${poppins.variable} antialiased`}>
+        <header className="bg-[#25262A] text-white p-4">
           <div className="max-w-7xl mx-auto flex justify-between items-center">
-            <h1
-              className="text-lg font-bold bg-gradient-to-r from-[#7D36E5] to-[#BE4DFD] bg-clip-text text-transparent"
-            >
+            <h1 className="text-lg font-bold bg-gradient-to-r from-[#7D36E5] to-[#BE4DFD] bg-clip-text text-transparent">
               Rizzlr.ai
             </h1>
             <nav className="flex space-x-6">
