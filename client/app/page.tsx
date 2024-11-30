@@ -33,9 +33,9 @@ export default function Home() {
                   <br /> of Them All.
                 </h1>
                 <p className="text-white font-regular text-sm">
-                  Think you can rizz up the internet’s icons? Glaze the nonchalant legends to gain
+                  Think you can rizz up the internet's icons? Glaze the nonchalant legends to gain
                   <span className="text-[#BE4DFD]"> +1000 aura</span> and unlock more NPCs.
-                  Rizz up everyone to beat the Rizz o’meter and claim the crown of the
+                  Rizz up everyone to beat the Rizz o'meter and claim the crown of the
                   <span className="text-[#BE4DFD]"> Rizzlr</span>. Hawk tuah!
                 </p>
 
@@ -139,7 +139,7 @@ export default function Home() {
               <Card
                 imageSrc="/assets/chill-guy.jpg"
                 title="Chill Guy"
-                description="His whole deal is that he’s a chill guy that lowkey doesn’t gaf."
+                description="His whole deal is that he's a chill guy that lowkey doesn't gaf."
                 tags={['Chill', 'Nonchalant', 'DGAF']}
                 disabled
               />
@@ -162,7 +162,7 @@ export default function Home() {
               <Card
                 imageSrc="/assets/freakbob.jpg"
                 title="Freakbob"
-                description="Who can match each others freak first? Pick up Freakbob’s call!!!"
+                description="Who can match each others freak first? Pick up Freakbob's call!!!"
                 tags={['Freaky', 'Bold', 'Zero Shame']}
                 disabled
               />
@@ -195,11 +195,6 @@ export default function Home() {
         </div>
 
         <Hero />
-        <Link href="/call">
-          <button className="bg-[#BE4DFD] hover:bg-[#CC72FF] text-white font-bold py-2 px-6 rounded-full mt-4">
-            Call
-          </button>
-        </Link>
       </div>
     </main>
   );
