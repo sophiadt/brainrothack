@@ -1,6 +1,8 @@
 import Hero from "@/components/Hero";
 import Call1 from "../components/Call1";
 import Link from "next/link";
+import Card from "@/components/Card";
+
 
 export default function Home() {
   return (
@@ -73,11 +75,11 @@ export default function Home() {
 
         {/* Overall Rizz Score Progress Bar */}
         <div className="mt-10 text-center">
-          <h2 className="text-white text-lg font-bold mb-4">Overall Rizz Score</h2>
+          <h2 className="text-white font-semibold text-2xl mb-5">Overall Rizz Score</h2>
           <div className="relative w-full max-w-5xl mx-auto">
             {/* Progress Bar */}
             <div className="h-8 bg-[#3B3D43] rounded-full relative">
-              <div className="h-full bg-gradient-to-r from-[#7D36E5] to-[#BE4DFD] rounded-full w-[40%]"></div>
+              <div className="h-full bg-gradient-to-r from-[#7D36E5] to-[#BE4DFD] rounded-full w-[52%]"></div>
             </div>
 
             {/* Milestone Images */}
@@ -85,27 +87,27 @@ export default function Home() {
               <img
                 src="/assets/gooner.png"
                 alt="Gooner"
-                className="w-16 h-11 rounded-full transform translate-y-[2px]"  
+                className="w-16 h-11 rounded-full transform translate-y-[2px]"
               />
               <img
                 src="/assets/omega.png"
                 alt="Omega"
-                className="w-11 h-11 rounded-full transform translate-y-[2px]"  
+                className="w-11 h-11 rounded-full transform translate-y-[2px]"
               />
               <img
                 src="/assets/beta.png"
                 alt="Beta"
-                className="w-11 h-11 rounded-full transform translate-y-[2px]" 
+                className="w-11 h-11 rounded-full transform translate-y-[2px]"
               />
               <img
                 src="/assets/alpha.png"
                 alt="Alpha"
-                className="w-13 h-12 rounded-full transform translate-y-[2px]" 
+                className="w-13 h-12 rounded-full transform translate-y-[2px]"
               />
               <img
                 src="/assets/rizzlr.png"
                 alt="Rizzlr"
-                className="w-9 h-11 rounded-full transform translate-y-[2px]" 
+                className="w-9 h-11 rounded-full transform translate-y-[2px]"
               />
             </div>
 
@@ -120,6 +122,20 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+
+        <div className="mt-10">
+  <h2 className="text-white font-semibold text-2xl mb-5 text-center">Recommended for You</h2>
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1">
+    <Card /> {/* The Card component is used here */}
+    <Card /> {/* The Card component is used here */}
+    <Card /> {/* The Card component is used here */}
+    <Card /> {/* The Card component is used here */}
+    <Card /> {/* The Card component is used here */}
+    <Card /> {/* The Card component is used here */}
+  </div>
+</div>
+
 
 
         <Hero />

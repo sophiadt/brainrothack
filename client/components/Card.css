@@ -1,0 +1,67 @@
+.card {
+    background-color: #25262A;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px;
+    text-align: left;
+    max-width: 250px;
+    display: inline-block;
+}
+
+.card .card-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10%;
+    margin-bottom: 10px;
+}
+
+.card .card-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  margin: 0;
+  color: white;
+  font-size: 16px;
+}
+
+.card .card-text {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    color: white;
+    font-size: 14px;
+}
+
+/* Container for pills */
+.pill-container {
+    display: flex;
+    justify-content: space-between; /* Space out pills equally */
+    gap: 5px; /* Adds 5px space between each pill */
+    margin-top: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap; /* Prevents pills from overflowing if the container is too narrow */
+  }
+  
+  /* Style for the pill */
+  .pill-shape {
+    display: inline-block; /* Keeps pills inline */
+    padding: 5px 10px; /* Adds padding for better pill shape */
+    margin: 0; /* Remove extra margin */
+    background-color: #BE4DFD; 
+    color: white; 
+    border-radius: 9999px; /* Fully rounded pill shape */
+    font-weight: 500; /* Medium weight */
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+  }
+
+  .card .card-call{
+    text-align: center;
+    padding: 8px 20px; 
+    margin: 10px 0; 
+    background-color: #BE4DFD; 
+    color: white; 
+    border-radius: 9999px; /* Makes the pill shape */
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    width: 100%;
+  }
