@@ -213,7 +213,7 @@ export class FunctionCallingLlmClient {
           type: "function",
           function: {
             name: "end_call",
-            description: "End the call only when user explicitly requests it.",
+            description: "End the call only when user explicitly requests it or when you feel you have been successfully rizzed or when the romance has failed miserably.",
             parameters: {
               type: "object",
               properties: {
@@ -227,30 +227,6 @@ export class FunctionCallingLlmClient {
             },
           },
         },
-        {
-          type: "function",
-          function: {
-            name: "book_appointment",
-            description: "Book an appointment to meet our doctor in office.",
-            parameters: {
-              type: "object",
-              properties: {
-                message: {
-                  type: "string",
-                  description:
-                    "The message you will say while setting up the appointment like 'one moment'",
-                },
-                date: {
-                  type: "string",
-                  description:
-                    "The date of appointment to make in forms of year-month-day.",
-                },
-              },
-              required: ["message"],
-            },
-          },
-        },
-      ];
         // {
         //   type: "function",
         //   function: {
@@ -268,7 +244,8 @@ export class FunctionCallingLlmClient {
         //       required: ["rizzscore"],
         //     },
         //   },
-        // }
+        // },
+      ];
 
       const events = await this.client.chat.completions.create({
         model: "gpt-4o",
