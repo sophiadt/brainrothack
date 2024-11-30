@@ -7,6 +7,7 @@ export default function Home() {
   return (
     <main className="relative bg-[#18181B] flex justify-center items-center flex-col overflow-hidden mx-auto sm:px-10 px-5 min-h-screen">
       <div className="max-w-7xl w-full">
+        <Hero />
         <div className="flex justify-center items-center space-x-4">
           <div className="flex-1 pt-8">
             <img
@@ -193,8 +194,6 @@ export default function Home() {
             />
           </div>
         </div>
-
-        <Hero />
       </div>
     </main>
   );
