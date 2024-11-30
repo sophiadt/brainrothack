@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import "./App.css";
+import "./Call1.css";
 import { RetellWebClient } from "retell-client-js-sdk";
 
-const agentId = "agent_88b28ca227d74c2fc74b776ad0";
+const agentId = "agent_444f3c52c2ad6a2b2042e77f7a";
 
 interface RegisterCallResponse {
   access_token: string;
@@ -12,7 +12,7 @@ interface RegisterCallResponse {
 
 const retellWebClient = new RetellWebClient();
 
-const App = () => {
+const Call1 = () => {
   const [isCalling, setIsCalling] = useState(false);
 
   // Initialize the SDK
@@ -80,33 +80,25 @@ const App = () => {
 
   async function registerCall(agentId: string): Promise<RegisterCallResponse> {
     try {
-      // Update the URL to match the new backend endpoint you created
-      const response = await fetch("http://localhost:8080/create-web-call", {
+      const response = await fetch("/api/create-web-call", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          agent_id: agentId, // Pass the agentId as agent_id
-          // You can optionally add metadata and retell_llm_dynamic_variables here if needed
-          // metadata: { your_key: "your_value" },
-          // retell_llm_dynamic_variables: { variable_key: "variable_value" }
+          agent_id: agentId
         }),
       });
-  
+
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
-  
+
       const data: RegisterCallResponse = await response.json();
       return data;
     } catch (err) {
-      console.log(err);
-      if (err instanceof Error) {
-        throw new Error(err.message);
-      } else {
-        throw new Error('An unknown error occurred');
-      }      
+      console.error("Error registering call:", err);
+      throw new Error("Failed to register call");
     }
   }
 
@@ -121,4 +113,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Call1;

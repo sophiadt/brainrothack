@@ -1,5 +1,5 @@
 import Hero from "@/components/Hero";
-import App from "../components/App";
+import Call1 from "../components/Call1";
 import Link from "next/link";
 
 export default function Home() {
@@ -123,7 +123,7 @@ export default function Home() {
 
 
         <Hero />
-        <App />
+        <Call1 />
       </div>
     </main>
   );
