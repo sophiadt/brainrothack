@@ -1,5 +1,9 @@
 // app/api/create-web-call/route.ts
 
+import dotenv from "dotenv";
+// Load up env file which contains credentials
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
+
 import { NextRequest, NextResponse } from 'next/server';
 import axios, { AxiosResponse } from 'axios';
 import { CreateWebCallRequest, RetellAIResponse } from '@/types/api';

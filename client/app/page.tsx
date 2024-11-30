@@ -1,5 +1,5 @@
 import Hero from "@/components/Hero";
-import Call1 from "../components/Call1";
+import Call from "../components/Call";
 import Link from "next/link";
 import Card from "@/components/Card";
 
@@ -195,7 +195,7 @@ export default function Home() {
         </div>
 
         <Hero />
-        <Call1 />
+        <Call />
       </div>
     </main>
   );

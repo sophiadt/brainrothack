@@ -1,67 +1,112 @@
-import { useState } from 'react';
-import Retell from 'retell-sdk';
+"use client";
 
-const client = new Retell({
-  apiKey: '', // Add your API Key here
-});
+import React, { useEffect, useState } from "react";
+import "./Call.css";
+import { RetellWebClient } from "retell-client-js-sdk";
+
+const agentId = "agent_88b28ca227d74c2fc74b776ad0";
+
+interface RegisterCallResponse {
+  access_token: string;
+}
+
+const retellWebClient = new RetellWebClient();
 
 const Call = () => {
   const [isCalling, setIsCalling] = useState(false);
 
-  // Toggle Call Start/Stop
+  // Initialize the SDK
+  useEffect(() => {
+    retellWebClient.on("call_started", () => {
+      console.log("call started");
+    });
+    
+    retellWebClient.on("call_ended", () => {
+      console.log("call ended");
+      setIsCalling(false);
+    });
+    
+    // When agent starts talking for the utterance
+    // useful for animation
+    retellWebClient.on("agent_start_talking", () => {
+      console.log("agent_start_talking");
+    });
+    
+    // When agent is done talking for the utterance
+    // useful for animation
+    retellWebClient.on("agent_stop_talking", () => {
+      console.log("agent_stop_talking");
+    });
+    
+    // Real time pcm audio bytes being played back, in format of Float32Array
+    // only available when emitRawAudioSamples is true
+    retellWebClient.on("audio", (audio) => {
+      // console.log(audio);
+    });
+    
+    // Update message such as transcript
+    // You can get transcrit with update.transcript
+    // Please note that transcript only contains last 5 sentences to avoid the payload being too large
+    retellWebClient.on("update", (update) => {
+      // console.log(update);
+    });
+    
+    retellWebClient.on("metadata", (metadata) => {
+      // console.log(metadata);
+    });
+    
+    retellWebClient.on("error", (error) => {
+      console.error("An error occurred:", error);
+      // Stop the call
+      retellWebClient.stopCall();
+    });
+  }, []);
+
   const toggleConversation = async () => {
     if (isCalling) {
-      console.log('Stopping the call...');
-      // Stop the conversation
-      await client.call.stopCall().catch(console.error);
-      setIsCalling(false); // Update button state
+      retellWebClient.stopCall();
     } else {
-      console.log('Starting a new call...');
-      const agentId = 'agent_88b28ca227d74c2fc74b776ad0'; // Replace with your agent ID
-      try {
-        const registerCallResponse = await registerCall(agentId);
-        if (registerCallResponse.access_token) {
-          await client.call
-            .startCall({
-              accessToken: registerCallResponse.access_token,
-            })
-            .catch(console.error);
-          setIsCalling(true); // Update button state
-        }
-      } catch (error) {
-        console.error('Failed to start the call:', error);
+      const registerCallResponse = await registerCall(agentId);
+      if (registerCallResponse.access_token) {
+        retellWebClient
+          .startCall({
+            accessToken: registerCallResponse.access_token,
+          })
+          .catch(console.error);
+        setIsCalling(true); // Update button to "Stop" when conversation starts
       }
     }
   };
 
-  // Register a Web Call
-  const registerCall = async (agentId: string) => {
+  async function registerCall(agentId: string): Promise<RegisterCallResponse> {
     try {
-      const response = await fetch('http://localhost:8080/create-web-call', {
-        method: 'POST',
+      const response = await fetch("/api/create-web-call", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ agent_id: agentId }),
+        body: JSON.stringify({
+          agent_id: agentId,
+        }),
       });
 
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
 
-      return await response.json(); // Return parsed JSON
-    } catch (error) {
-      console.error('Error registering call:', error);
-      throw error;
+      const data: RegisterCallResponse = await response.json();
+      return data;
+    } catch (err) {
+      console.error("Error registering call:", err);
+      throw new Error("Failed to register call");
     }
-  };
+  }
 
   return (
-    <div>
-      <header>
-        <h1>AI Call Page</h1>
+    <div className="App">
+      <header className="App-header">
         <button onClick={toggleConversation}>
-          {isCalling ? 'Stop' : 'Start'}
+          {isCalling ? "Stop" : "Start"}
         </button>
       </header>
     </div>
