@@ -195,7 +195,11 @@ export default function Home() {
         </div>
 
         <Hero />
-        <Call />
+        <Link href="/call">
+          <button className="bg-[#BE4DFD] hover:bg-[#CC72FF] text-white font-bold py-2 px-6 rounded-full mt-4">
+            Call
+          </button>
+        </Link>
       </div>
     </main>
   );

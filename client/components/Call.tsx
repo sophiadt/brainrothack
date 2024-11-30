@@ -12,55 +12,62 @@ interface RegisterCallResponse {
 
 const retellWebClient = new RetellWebClient();
 
-const Call = () => {
+const Call = ({ startCall }: { startCall: boolean }) => {
   const [isCalling, setIsCalling] = useState(false);
 
-  // Initialize the SDK
+  // Initialize the SDK and start the call automatically
   useEffect(() => {
+    const handleCall = async () => {
+      const registerCallResponse = await registerCall(agentId);
+      if (registerCallResponse.access_token) {
+        retellWebClient
+          .startCall({
+            accessToken: registerCallResponse.access_token,
+          })
+          .catch(console.error);
+        setIsCalling(true);
+      }
+    };
+
+    if (startCall) {
+      handleCall();
+    }
+
     retellWebClient.on("call_started", () => {
       console.log("call started");
     });
-    
+
     retellWebClient.on("call_ended", () => {
       console.log("call ended");
       setIsCalling(false);
     });
-    
-    // When agent starts talking for the utterance
-    // useful for animation
+
     retellWebClient.on("agent_start_talking", () => {
       console.log("agent_start_talking");
     });
-    
-    // When agent is done talking for the utterance
-    // useful for animation
+
     retellWebClient.on("agent_stop_talking", () => {
       console.log("agent_stop_talking");
     });
-    
-    // Real time pcm audio bytes being played back, in format of Float32Array
-    // only available when emitRawAudioSamples is true
+
     retellWebClient.on("audio", (audio) => {
       // console.log(audio);
     });
-    
-    // Update message such as transcript
-    // You can get transcrit with update.transcript
-    // Please note that transcript only contains last 5 sentences to avoid the payload being too large
+
     retellWebClient.on("update", (update) => {
       // console.log(update);
     });
-    
+
     retellWebClient.on("metadata", (metadata) => {
       // console.log(metadata);
     });
-    
+
     retellWebClient.on("error", (error) => {
       console.error("An error occurred:", error);
       // Stop the call
       retellWebClient.stopCall();
     });
-  }, []);
+  }, [startCall]);
 
   const toggleConversation = async () => {
     if (isCalling) {
@@ -73,7 +80,7 @@ const Call = () => {
             accessToken: registerCallResponse.access_token,
           })
           .catch(console.error);
-        setIsCalling(true); // Update button to "Stop" when conversation starts
+        setIsCalling(true);
       }
     }
   };
@@ -106,7 +113,7 @@ const Call = () => {
     <div className="App">
       <header className="App-header">
         <button onClick={toggleConversation}>
-          {isCalling ? "Stop" : "Start"}
+          {isCalling ? "Hang Up" : "Start Call"}
         </button>
       </header>
     </div>
