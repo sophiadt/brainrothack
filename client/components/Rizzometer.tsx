@@ -6,7 +6,7 @@ export default function Rizzometer() {
     const [rizzScore, setRizzScore] = useState(50); // Move useState inside the component
 
     useEffect(() => {
-        const websocket = new WebSocket("ws://localhost:8000");
+        const websocket = new WebSocket("ws://localhost:3000");
 
         websocket.onopen = () => {
             console.log('WebSocket connection established');
