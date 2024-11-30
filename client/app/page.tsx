@@ -85,27 +85,27 @@ export default function Home() {
               <img
                 src="/assets/gooner.png"
                 alt="Gooner"
-                className="w-16 h-11 rounded-full transform translate-y-[2px]"  // Even higher
+                className="w-16 h-11 rounded-full transform translate-y-[2px]"  
               />
               <img
                 src="/assets/omega.png"
                 alt="Omega"
-                className="w-11 h-11 rounded-full transform translate-y-[2px]"  // Even higher
+                className="w-11 h-11 rounded-full transform translate-y-[2px]"  
               />
               <img
                 src="/assets/beta.png"
                 alt="Beta"
-                className="w-11 h-11 rounded-full transform translate-y-[2px]"  // Even higher
+                className="w-11 h-11 rounded-full transform translate-y-[2px]" 
               />
               <img
                 src="/assets/alpha.png"
                 alt="Alpha"
-                className="w-12 h-12 rounded-full transform translate-y-[2px]"  // Even higher
+                className="w-13 h-12 rounded-full transform translate-y-[2px]" 
               />
               <img
                 src="/assets/rizzlr.png"
                 alt="Rizzlr"
-                className="w-9 h-11 rounded-full transform translate-y-[2px]"  // Even higher
+                className="w-9 h-11 rounded-full transform translate-y-[2px]" 
               />
             </div>
 
