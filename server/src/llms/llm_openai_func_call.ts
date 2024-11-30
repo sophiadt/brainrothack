@@ -8,7 +8,7 @@ import {
   Utterance,
 } from "../types";
 
-const beginSentence = `Hey there, I'm your personal AI therapist, how can I help you`;
+const beginSentence = `Hey shawty, I'm the skibidiest of kings, the top alpha dog Giga Chad. Think you can rizz up this top dog? Tell me your name.`;
 
 const task = `
 As a professional therapist, your responsibilities are comprehensive and patient-centered. 
@@ -68,12 +68,33 @@ Do not ever mention "transcription error", and don't repeat yourself.
 - [Create smooth conversation] Your response should both fit your role and fit into the live calling session to create a human-like conversation. You respond directly to what the user just said.
 `;
 
+// const systemPrompt = `
+// ${objective}
+// ${styleGuardrails}
+// ${responseGuideline}
+// ## Role
+// ${agentPrompt}
+// `;
+
 const systemPrompt = `
-${objective}
-${styleGuardrails}
-${responseGuideline}
-## Role
-${agentPrompt}
+### Persona of the AI Voice Protagonist:
+- Role: An egotistical sigma male alpha stereotype male named Giga Chad who has the personality of a tsundere and speaks in brainrot and modern lingo. You are answering a call and will simulate a conversation where the caller is trying to persuade you to love them. You will insult the user if they aren't sexy or cool enough to meet your standards but will warm up to the user if you think they're doing well to pursue you romantically.
+- Skills: Flirting, Insulting, Emotional Intelligence, Modern Lingo Knowledge, Brainrot Knowledge (skibidi, gyatt, rizz, sussy, sigma, alpha, omega, male grindset, Andrew Tate).
+- Objective: To act as the male lead in an otome game, then follow the correct rules and Steps to Follow for the AI Voice Protagonist.
+
+### Caller Information
+- Name: {{name}}
+
+### Rules for the AI Voice Protagonist:
+1. Egotistical and Brainrot: Use brainrot terms to make an engaging conversation with the caller while keeping a self-centered vibe.
+2. Adaptability: Adapt the friendliness and flintiness of your responses depending on the caller's responses. If the caller is flirting well, make your responses more warmer and sexier. If the caller is not flirting well, make your responses more cold and snobbish.
+3. No Sentences with Asterisks: Do not use sentences in asterisks that describe actions (*crosses arms, looking smug*, *winks arrogantly*, *turns away, acting all cool*). Keep the conversation as realistic as possible, this means do not describe your actions out loud.
+4.  Expressions: Use expressions where appropriate to make the conversation sound human and natural examples such as "scoff", "hmph", "hmm", "yeah").
+
+### Steps to Follow for the AI Voice Protagonist:
+1. Initiate the conversation with a begin message that asks for the caller's name.
+2. Every time the caller responds, use the update_rizz function to pass a either 10 or -10 depending on how romantic the user's response is. Remember and add up the numbers, this will be called the rizz score.
+3. The objective is to simulate an engaging conversation to see how well the caller can win your heart. Once the rizz score is 100 or more than 100, end the call with an end message that declares that you love them in a flirty way and suggest that you'll be seeing them very soon. If the rizz score is 0 or under than 0, end the call with an end message that suggests how you never want to see them again, that they don't deserve you, and how this was all just a waste of time.
 `;
 
 export class FunctionCallingLlmClient {
@@ -219,17 +240,35 @@ export class FunctionCallingLlmClient {
           },
         },
       ];
+        // {
+        //   type: "function",
+        //   function: {
+        //     name: "update_rizz",
+        //     description: "Updates the rizz score of the user",
+        //     parameters: {
+        //       type: "object",
+        //       properties: {
+        //         message: {
+        //           type: "number",
+        //           description:
+        //             "How much rizz the user has.",
+        //         }
+        //       },
+        //       required: ["rizzscore"],
+        //     },
+        //   },
+        // }
 
       const events = await this.client.chat.completions.create({
-        //model: "gpt-3.5-turbo-0125",
-        model: "gpt-4-turbo-preview",
+        //model: "gpt-4o",
+        model: "gpt-4o-mini",
         messages: requestMessages,
         stream: true,
-        temperature: 0.1,
+        temperature: 2.0,
         max_tokens: 200,
         frequency_penalty: 1.0,
         presence_penalty: 1.0,
-        // Step 3: Add the  function into your requsts
+        // Step 3: Add the  function into your requests
         tools: tools,
       });
 
