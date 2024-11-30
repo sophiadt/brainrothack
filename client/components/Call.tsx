@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import "./Call.css";
 import { RetellWebClient } from "retell-client-js-sdk";
 
 const agentId = "agent_88b28ca227d74c2fc74b776ad0";
@@ -112,8 +111,8 @@ const Call = ({ startCall }: { startCall: boolean }) => {
   return (
     <div className="App">
       <header className="App-header">
-        <button onClick={toggleConversation}>
-          {isCalling ? "Hang Up" : "Start Call"}
+        <button onClick={toggleConversation} className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-full">
+          {isCalling ? "Hang Up" : "Calling your alpha..."}
         </button>
       </header>
     </div>
