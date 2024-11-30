@@ -21,8 +21,8 @@ export default function Home() {
           <div
             className="rounded-lg p-6 mb-6 w-full max-w-2xl"
             style={{
-              height: '400px',
-              background: 'linear-gradient(to right, #25262A, #43454C, #7F8290)',
+              height: "400px",
+              background: "linear-gradient(to right, #25262A, #43454C, #7F8290)",
             }}
           >
             <div className="flex justify-between items-center">
@@ -50,15 +50,14 @@ export default function Home() {
                 </Link>
               </div>
 
-              {/* Giga Chad Image Section (Move to the far right) */}
-              <div className="ml-auto" style={{ width: '600px', height: '350px' }}>
+              {/* Giga Chad Image */}
+              <div className="ml-auto" style={{ width: "600px", height: "350px" }}>
                 <img
                   src="/assets/giga-chad-hero.png"
                   alt="Giga Chad Hero"
                   className="w-full h-full object-cover"
                 />
               </div>
-
             </div>
           </div>
 
@@ -71,6 +70,57 @@ export default function Home() {
             />
           </div>
         </div>
+
+        {/* Overall Rizz Score Progress Bar */}
+        <div className="mt-10 text-center">
+          <h2 className="text-white text-lg font-bold mb-4">Overall Rizz Score</h2>
+          <div className="relative w-full max-w-5xl mx-auto">
+            {/* Progress Bar */}
+            <div className="h-8 bg-[#3B3D43] rounded-full relative">
+              <div className="h-full bg-gradient-to-r from-[#7D36E5] to-[#BE4DFD] rounded-full w-[40%]"></div>
+            </div>
+
+            {/* Milestone Images */}
+            <div className="absolute inset-0 flex justify-between items-center -top-4">
+              <img
+                src="/assets/gooner.png"
+                alt="Gooner"
+                className="w-16 h-11 rounded-full transform translate-y-[2px]"  // Even higher
+              />
+              <img
+                src="/assets/omega.png"
+                alt="Omega"
+                className="w-11 h-11 rounded-full transform translate-y-[2px]"  // Even higher
+              />
+              <img
+                src="/assets/beta.png"
+                alt="Beta"
+                className="w-11 h-11 rounded-full transform translate-y-[2px]"  // Even higher
+              />
+              <img
+                src="/assets/alpha.png"
+                alt="Alpha"
+                className="w-12 h-12 rounded-full transform translate-y-[2px]"  // Even higher
+              />
+              <img
+                src="/assets/rizzlr.png"
+                alt="Rizzlr"
+                className="w-9 h-11 rounded-full transform translate-y-[2px]"  // Even higher
+              />
+            </div>
+
+
+            {/* Milestone Labels */}
+            <div className="flex justify-between mt-6">
+              <span className="text-white text-regular font-poppins font-semibold text-center">Gooner</span>
+              <span className="text-white text-regular font-poppins font-semibold text-center">Omega</span>
+              <span className="text-white text-regular font-poppins font-semibold text-center">Beta</span>
+              <span className="text-white text-regular font-poppins font-semibold text-center">Alpha</span>
+              <span className="text-white text-regular font-poppins font-semibold text-center">RIZZLR</span>
+            </div>
+          </div>
+        </div>
+
 
         <Hero />
         <App />
