@@ -24,15 +24,15 @@ export default function CallPage() {
 
   return (
     <div className="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center">
-      <div className="mt-8">
+      <h1 className="text-4xl font-bold mb-4">Giga Chad Lv. 1</h1>
+      <div className="mt-8 mb-4">
         <img
           src="/assets/giga-chad.jpg"
           alt="Giga Chad Front Profile"
           className="w-60 h-60 rounded-full object-cover object-center"
         />
       </div>
-      <h1 className="text-4xl font-bold mb-4">Giga Chad Lv. 1</h1>
-      <p className="text-lg">{loading ? "Connecting to your alpha..." : "Your alpha is listening..."}</p>
+      <p className="text-lg mb-2">{loading ? "Connecting to your alpha..." : "Your alpha is listening..."}</p>
       <div className="mt-8 flex items-center space-x-6">
         <Call startCall={startCall} />
         {/* <button
