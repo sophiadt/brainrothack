@@ -86,7 +86,7 @@ const Call1 = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          agent_id: agentId
+          agent_id: agentId,
         }),
       });
 
