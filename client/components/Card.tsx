@@ -1,31 +1,37 @@
 import React from 'react';
 import './Card.css';
 
-const Card: React.FC = () => {
-    return (
-        <div className="card">
-            <img className="card-image" src="/assets/giga-chad.jpg" alt="card component" />
-            <h2 className="card-title">Giga Chad</h2>
+interface CardProps {
+  imageSrc: string;
+  title: string;
+  description: string;
+  tags: string[];
+  disabled?: boolean;
+}
 
-            {/* Container for the pills */}
-            <div className="pill-container">
-                <h3 className="pill-shape">Confident</h3>
-                <h4 className="pill-shape">Sigma</h4>
-                <h5 className="pill-shape">Alpha</h5>
-            </div>
+const Card: React.FC<CardProps> = ({ imageSrc, title, description, tags, disabled = false }) => {
+  return (
+    <div className="card">
+      <img className="card-image" src={imageSrc} alt={title} />
+      <h2 className="card-title">{title}</h2>
 
-            <p className="card-text">
-                Giga Chad reeks of peak masculinity — rizzing him up is nearly impossible.
-            </p>
+      <div className="pill-container">
+        {tags.map((tag, index) => (
+          <span key={index} className="pill-shape">{tag}</span>
+        ))}
+      </div>
 
-            <a href="/call">
-                <button className="card-call">
-                    Call
-                </button>
-            </a>
+      <p className="card-text">{description}</p>
 
-        </div>
-    );
+      <a href={disabled ? undefined : "/call"}>
+        <button className={`card-call ${disabled ? 'disabled' : ''}`} disabled={disabled}>
+          {disabled ? '10000 Aura Points' : 'Call'}
+        </button>
+      </a>
+    </div>
+  );
 };
 
 export default Card;
+
+
