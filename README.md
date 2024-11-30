@@ -1,4 +1,4 @@
-# brainrothack
+# Rizzlr.ai
 
 ### Install dependencies
 Run this command in both the `client` and `server` folders
