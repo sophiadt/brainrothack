@@ -1,19 +1,13 @@
-"use client";
-
-import dotenv from "dotenv";
-// Load up env file which contains credentials
-dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
-
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { RetellWebClient } from "retell-client-js-sdk";
-import Link from "next/link"; // Import the Link component
-import Retell from "retell-sdk"; // Import the Retell SDK
+import Link from "next/link";
+import Retell from "retell-sdk";
 
 const agentId = "agent_5e9cb4810e60247b0a957428ff";
 
 interface RegisterCallResponse {
   access_token: string;
-  call_id: string; // Add call_id to the response
+  call_id: string;
 }
 
 const retellWebClient = new RetellWebClient();
@@ -26,79 +20,60 @@ const Call = ({
   onAgentTalkingChange: (isTalking: boolean, userTranscript: string) => void;
 }) => {
   const [isCalling, setIsCalling] = useState(false);
-  const [showRizzScore, setShowRizzScore] = useState(false); // State to handle rizz score visibility
-  const [rizzMessage, setRizzMessage] = useState<string>(""); // Store rizz results message
-  const [loading, setLoading] = useState(false); // State for loading text
-  const [showHangUpButton, setShowHangUpButton] = useState(false); // State to control visibility of Hang Up button
-  const [showListeningText, setShowListeningText] = useState(false); // State to control visibility of the "Your alpha is listening..." text
-  const [transcriptContent, setTranscriptContent] = useState<string>(""); // State to store the most recent transcript content
-  const [callId, setCallId] = useState<string>(""); // State to store the call_id after registering the call
-  const [isLoadingAnalysis, setIsLoadingAnalysis] = useState(false); // State to manage loading animation for the call analysis
+  const [showRizzScore, setShowRizzScore] = useState(false);
+  const [rizzMessage, setRizzMessage] = useState<string>("");
+  const [loading, setLoading] = useState(true);
+  const [showHangUpButton, setShowHangUpButton] = useState(false);
+  const [showListeningText, setShowListeningText] = useState(false);
+  const [transcriptContent, setTranscriptContent] = useState<string>("");
+  const [callId, setCallId] = useState<string>("");
+  const [isLoadingAnalysis, setIsLoadingAnalysis] = useState(false);
 
   const retellClient = new Retell({
-    apiKey: "", // Fetch API key from environment variables
+    apiKey: "",
   });
 
-  console.log("apikey", process.env.RETELL_API_KEY);
-
-  // Initialize the SDK and start the call manually
+  // Handle start call and register the call
   useEffect(() => {
-    let callStarted = false; // To prevent duplicate calls
-
     const handleCall = async () => {
-      if (callStarted) return; // Skip if already started
-      callStarted = true;
-
-      try {
-        const registerCallResponse = await registerCall(agentId);
-        if (registerCallResponse.access_token) {
-          await retellWebClient.startCall({
+      const registerCallResponse = await registerCall(agentId);
+      if (registerCallResponse.access_token) {
+        retellWebClient
+          .startCall({
             accessToken: registerCallResponse.access_token,
-          });
-          setIsCalling(true);
-
-          // Store the call_id so it can be used after the call ends
-          setCallId(registerCallResponse.call_id);
-        }
-      } catch (err) {
-        console.error("Error starting call:", err);
+          })
+          .catch(console.error);
+        setIsCalling(true);
+        setCallId(registerCallResponse.call_id);  // Store the call ID
       }
     };
 
+    if (startCall) {
+      handleCall();
+    }
+
     retellWebClient.on("call_started", () => {
-      console.log("Call started");
+      console.log("call started");
     });
 
     retellWebClient.on("call_ended", async () => {
-      console.log("Call ended");
+      console.log("call ended");
       setIsCalling(false);
-      onAgentTalkingChange(false, ""); // Update agent talking state
-      setShowRizzScore(true); // Show rizz score after the call ends
-      setShowListeningText(false); // Hide "Your alpha is listening..." text after call ends
-
-      // After the call ends, fetch the call analysis using callId
-      if (callId) {
-        console.log("Fetching call analysis...", callId);
-
-        setIsLoadingAnalysis(true); // Start the loading animation
-        await delay(2000); // Delay before fetching analysis
-        const callAnalysis = await getCallAnalysis(callId);
-        setRizzMessage(callAnalysis); // Set rizz results
-        setIsLoadingAnalysis(false); // Stop the loading animation
-      }
+      onAgentTalkingChange(false, "");
+      setShowRizzScore(true);
+      setShowListeningText(false);
     });
 
     retellWebClient.on("agent_start_talking", () => {
       console.log("agent_start_talking");
-      onAgentTalkingChange(true, transcriptContent); // Notify parent of talking state and pass the user transcript
+      onAgentTalkingChange(true, transcriptContent);
     });
 
     retellWebClient.on("agent_stop_talking", () => {
       console.log("agent_stop_talking");
-      onAgentTalkingChange(false, ""); // Notify parent of talking state
+      onAgentTalkingChange(false, "");
     });
 
-    // Update message such as transcript
     retellWebClient.on("update", (update) => {
       if (update.transcript.length > 0) {
         const latestContent = update.transcript[update.transcript.length - 1]?.content;
@@ -108,35 +83,47 @@ const Call = ({
 
     retellWebClient.on("error", (error) => {
       console.error("An error occurred:", error);
-      // Stop the call
       retellWebClient.stopCall();
     });
-  }, [callId]);
+  }, [startCall]); // Only depends on startCall
 
-  // Handle the loading state delay
+  // Handle the loading state delay and show listening text after startCall is true
   useEffect(() => {
-    if (isCalling) {
+    if (startCall) {
       const timer = setTimeout(() => {
-        setLoading(false); // Change loading text after 0 seconds
-        setShowListeningText(true); // Show the "Your alpha is listening..." text
-        setShowHangUpButton(true); // Show the "Hang Up" button after 0 seconds
-      }, 0); // 0 second delay
+        setLoading(false);
+        setShowListeningText(true);
+        setShowHangUpButton(true);
+      }, 4000);
 
       return () => clearTimeout(timer);
     }
-  }, [isCalling]);
+  }, [startCall]);
+
+  // Fetch the call analysis once the callId is set and the call has ended
+  useEffect(() => {
+    const fetchAnalysis = async () => {
+      if (callId && !isCalling) { // Check if the call has ended and the callId is set
+        setIsLoadingAnalysis(true);
+        await delay(5000); // Delay before fetching analysis
+        const callAnalysis = await getCallAnalysis(callId);
+        setRizzMessage(callAnalysis);
+        setIsLoadingAnalysis(false);
+      }
+    };
+
+    if (callId && !isCalling) {
+      fetchAnalysis();
+    }
+  }, [callId, isCalling]); // Depends on callId and isCalling
 
   const toggleConversation = async () => {
     if (isCalling) {
       retellWebClient.stopCall();
-      setIsCalling(false);
-      setShowHangUpButton(false);
-      setShowListeningText(false);
     } else {
-      setLoading(true); // Show loading text immediately
       const registerCallResponse = await registerCall(agentId);
       if (registerCallResponse.access_token) {
-        await retellWebClient
+        retellWebClient
           .startCall({
             accessToken: registerCallResponse.access_token,
           })
@@ -145,6 +132,8 @@ const Call = ({
       }
     }
   };
+
+  const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   async function registerCall(agentId: string): Promise<RegisterCallResponse> {
     try {
@@ -159,29 +148,29 @@ const Call = ({
       });
 
       if (!response.ok) {
-        throw new Error(`Server responded with status ${response.status}`);
+        throw new Error(`Error: ${response.status}`);
       }
 
-      const data: RegisterCallResponse = await response.json();
+      const responseBody = await response.text();
+      if (!responseBody) {
+        throw new Error("Empty response body");
+      }
+
+      const data: RegisterCallResponse = JSON.parse(responseBody);
       return data;
     } catch (err) {
-      console.error("Error in registerCall function:", err.message);
-      throw new Error("Failed to register call: " + err.message);
+      console.error("Error registering call:", err);
+      throw new Error("Failed to register call");
     }
   }
 
-  // Fetch the call analysis using call_id after the call ends
   async function getCallAnalysis(callId: string) {
     try {
       const response = await retellClient.call.retrieve(callId);
-
-      // Check if 'call_analysis' and 'custom_analysis_data' exist in the response
       if (response.call_analysis && response.call_analysis.custom_analysis_data) {
         const customAnalysisData = response.call_analysis.custom_analysis_data;
-
-        // Check if rizz_results is available
         if (customAnalysisData.rizz_results) {
-          return customAnalysisData.rizz_results; // Return rizz_results
+          return customAnalysisData.rizz_results;
         } else {
           throw new Error("rizz_results not found in custom analysis data");
         }
@@ -190,7 +179,7 @@ const Call = ({
       }
     } catch (err) {
       console.error("Error fetching call analysis:", err);
-      return "Error retrieving rizz results"; // Return error message
+      return "Error retrieving rizz results";
     }
   }
 
@@ -198,7 +187,7 @@ const Call = ({
     <div>
       {showRizzScore ? (
         <div className="text-center mt-8">
-          <p className="text-2xl text-white">Rizz Results: {rizzMessage}</p>
+          <p className="text-2xl text-green-500">Rizz Feedback: {rizzMessage}</p>
           <Link href="/" passHref>
             <button className="bg-[#BE4DFD] hover:bg-[#CC72FF] text-white font-bold py-2 px-6 rounded-full mt-4">
               End Gooning Session
@@ -207,15 +196,6 @@ const Call = ({
         </div>
       ) : (
         <div className="text-center">
-          {!isCalling && !loading && (
-            <button
-              onClick={toggleConversation}
-              className="bg-gray-700 hover:bg-gray-600 text-white font-bold px-6 py-3 mt-3 rounded-full"
-            >
-              Call Alpha
-            </button>
-          )}
-
           {loading && (
             <>
               <p className="text-lg mb-4 italic">Connecting to your alpha...</p>
@@ -230,14 +210,13 @@ const Call = ({
 
           {showListeningText && !loading && (
             <>
-              {/* Transcript Box with fixed size */}
               <div
                 className="transcript-box"
                 style={{
-                  maxWidth: "40rem", // Adjust width as needed
+                  maxWidth: "40rem",
                   margin: "0 auto",
-                  whiteSpace: "pre-wrap", // Ensures line breaks are respected
-                  wordWrap: "break-word", // Prevents overflow of long words
+                  whiteSpace: "pre-wrap",
+                  wordWrap: "break-word",
                 }}
               >
                 <p className="text-lg mb-4 italic">{transcriptContent || "Your alpha is listening..."}</p>
