@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { RetellWebClient } from "retell-client-js-sdk";
+import Link from "next/link"; // Import the Link component
 
 const agentId = "agent_367bca6a3560b537e878082e49";
 
@@ -21,6 +22,9 @@ const Call = ({
   const [isCalling, setIsCalling] = useState(false);
   const [showRizzScore, setShowRizzScore] = useState(false); // State to handle rizz score visibility
   const [rizzScore, setRizzScore] = useState<number | null>(null); // Store the rizz score
+  const [loading, setLoading] = useState(true); // State for loading text
+  const [showListeningText, setShowListeningText] = useState(false); // State to control visibility of the "Your alpha is listening..." text
+  const [showHangUpButton, setShowHangUpButton] = useState(false); // State to control visibility of Hang Up button
 
   // Initialize the SDK and start the call automatically
   useEffect(() => {
@@ -50,6 +54,7 @@ const Call = ({
       onAgentTalkingChange(false); // Update agent talking state
       setRizzScore(Math.floor(Math.random() * 100) + 1); // Example rizz score generation
       setShowRizzScore(true); // Show rizz score after the call ends
+      setShowListeningText(false); // Hide "Your alpha is listening..." text after call ends
     });
 
     retellWebClient.on("agent_start_talking", () => {
@@ -69,6 +74,19 @@ const Call = ({
     });
   }, [startCall]);
 
+  // Handle the loading state delay
+  useEffect(() => {
+    if (startCall) {
+      const timer = setTimeout(() => {
+        setLoading(false); // Change loading text after 2 seconds
+        setShowListeningText(true); // Show the "Your alpha is listening..." text
+        setShowHangUpButton(true); // Show the "Hang Up" button after 2 seconds
+      }, 2000); // Adjust the delay as needed
+
+      return () => clearTimeout(timer);
+    }
+  }, [startCall]);
+
   const toggleConversation = async () => {
     if (isCalling) {
       retellWebClient.stopCall();
@@ -83,10 +101,6 @@ const Call = ({
         setIsCalling(true);
       }
     }
-  };
-
-  const handleGoHomeClick = () => {
-    window.location.href = "/"; // Redirect to the homepage
   };
 
   async function registerCall(agentId: string): Promise<RegisterCallResponse> {
@@ -118,21 +132,28 @@ const Call = ({
       {showRizzScore ? (
         <div className="text-center mt-8">
           <p className="text-2xl text-green-500">Your Rizz Score: {rizzScore}</p>
-          <button
-            onClick={handleGoHomeClick}
-            className="mt-4 bg-blue-500 hover:bg-blue-400 text-white px-6 py-3 rounded-full"
-          >
-            Go Back to Homepage
-          </button>
+          <Link href="/" passHref>
+            <button className="bg-[#BE4DFD] hover:bg-[#CC72FF] text-white font-bold py-2 px-6 rounded-full mt-4">
+              Go Back to Homepage
+            </button>
+          </Link>
         </div>
       ) : (
         <div className="text-center">
-          <button
-            onClick={toggleConversation}
-            className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-full"
-          >
-            {isCalling ? "Hang Up" : "Calling your alpha..."}
-          </button>
+          {loading ? (
+            <p className="text-lg mb-4">Connecting to your alpha...</p>
+          ) : (
+            showListeningText && <p className="text-lg mb-4">Your alpha is listening...</p>
+          )}
+
+          {showHangUpButton && (
+            <button
+              onClick={toggleConversation}
+              className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-full"
+            >
+              {isCalling ? "Hang Up" : "Calling your alpha..."}
+            </button>
+          )}
         </div>
       )}
     </div>

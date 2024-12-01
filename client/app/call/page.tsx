@@ -5,23 +5,11 @@ import Call from "@/components/Call";
 
 export default function CallPage() {
   const [startCall, setStartCall] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [isAgentTalking, setIsAgentTalking] = useState(false); // State to track agent talking
 
   useEffect(() => {
     setStartCall(true); // Trigger call start when the page loads
   }, []);
-
-  useEffect(() => {
-    if (startCall) {
-      // Simulate a delay for the call to start
-      const timer = setTimeout(() => {
-        setLoading(false);
-      }, 2000); // Adjust the delay as needed
-
-      return () => clearTimeout(timer);
-    }
-  }, [startCall]);
 
   // Function to update the agent talking state
   const handleAgentTalkingChange = (isTalking: boolean) => {
@@ -42,10 +30,7 @@ export default function CallPage() {
           }`}
         />
       </div>
-      <p className="text-lg mb-4">
-        {loading ? "Connecting to your alpha..." : "Your alpha is listening..."}
-      </p>
-      <div className="mt-8 flex items-center space-x-6">
+      <div className="mt-8 mb-4 flex items-center space-x-6">
         <Call
           startCall={startCall}
           onAgentTalkingChange={handleAgentTalkingChange} // Pass the handler
