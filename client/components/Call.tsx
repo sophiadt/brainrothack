@@ -17,7 +17,7 @@ const Call = ({
   onAgentTalkingChange,
 }: {
   startCall: boolean;
-  onAgentTalkingChange: (isTalking: boolean) => void;
+  onAgentTalkingChange: (isTalking: boolean, userTranscript: string) => void;
 }) => {
   const [isCalling, setIsCalling] = useState(false);
   const [showRizzScore, setShowRizzScore] = useState(false); // State to handle rizz score visibility
@@ -52,7 +52,7 @@ const Call = ({
     retellWebClient.on("call_ended", () => {
       console.log("call ended");
       setIsCalling(false);
-      onAgentTalkingChange(false); // Update agent talking state
+      onAgentTalkingChange(false, ""); // Update agent talking state
       setRizzScore(Math.floor(Math.random() * 100) + 1); // Example rizz score generation
       setShowRizzScore(true); // Show rizz score after the call ends
       setShowListeningText(false); // Hide "Your alpha is listening..." text after call ends
@@ -60,12 +60,12 @@ const Call = ({
 
     retellWebClient.on("agent_start_talking", () => {
       console.log("agent_start_talking");
-      onAgentTalkingChange(true); // Notify parent of talking state
+      onAgentTalkingChange(true, transcriptContent); // Notify parent of talking state and pass the user transcript
     });
 
     retellWebClient.on("agent_stop_talking", () => {
       console.log("agent_stop_talking");
-      onAgentTalkingChange(false); // Notify parent of talking state
+      onAgentTalkingChange(false, ""); // Notify parent of talking state
     });
 
     // Update message such as transcript
