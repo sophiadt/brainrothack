@@ -23,8 +23,9 @@ const Call = ({
   const [showRizzScore, setShowRizzScore] = useState(false); // State to handle rizz score visibility
   const [rizzScore, setRizzScore] = useState<number | null>(null); // Store the rizz score
   const [loading, setLoading] = useState(true); // State for loading text
-  const [showListeningText, setShowListeningText] = useState(false); // State to control visibility of the "Your alpha is listening..." text
   const [showHangUpButton, setShowHangUpButton] = useState(false); // State to control visibility of Hang Up button
+  const [showListeningText, setShowListeningText] = useState(false); // State to control visibility of the "Your alpha is listening..." text
+  const [transcriptContent, setTranscriptContent] = useState<string>(""); // State to store the most recent transcript content
 
   // Initialize the SDK and start the call automatically
   useEffect(() => {
@@ -65,6 +66,16 @@ const Call = ({
     retellWebClient.on("agent_stop_talking", () => {
       console.log("agent_stop_talking");
       onAgentTalkingChange(false); // Notify parent of talking state
+    });
+
+    // Update message such as transcript
+    retellWebClient.on("update", (update) => {
+      // console.log(update);
+      // Update the transcript content with the latest sentence from the agent's response
+      if (update.transcript.length > 0) {
+        const latestContent = update.transcript[update.transcript.length - 1]?.content;
+        setTranscriptContent(latestContent);
+      }
     });
 
     retellWebClient.on("error", (error) => {
@@ -154,7 +165,7 @@ const Call = ({
 
           {showListeningText && !loading && (
             <>
-              <p className="text-lg mb-4 italic">Your alpha is listening...</p>
+              <p className="text-lg mb-4 italic">{transcriptContent || "Your alpha is listening..."}</p>
               {showHangUpButton && (
                 <button
                   onClick={toggleConversation}
