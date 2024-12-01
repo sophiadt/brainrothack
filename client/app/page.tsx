@@ -147,8 +147,8 @@ export default function Home() {
               <Card
                 imageSrc="/assets/don-pollo.jpg"
                 title="Don Pollo"
-                description="Linganguli guli guli wacha lingangu lingangu linganguli guli wacha."
-                tags={['Linganguli', 'GuliGuli', 'Guli']}
+                description="Linganguli guli guli waza lingangu lingangu linganguli guli waza."
+                tags={['Linganguli', 'GuliGuli', 'Waza']}
                 disabled
               />
             </div>
