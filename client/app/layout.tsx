@@ -80,10 +80,10 @@ export default function RootLayout({
   
             {/* Right Section: Aura Points and Account Info */}
             <div className="flex items-center space-x-4">
-              {/* Aura Points Button */}
-              <button className="bg-[#BE4DFD] text-sm px-4 py-2 rounded-full">
+              {/* Aura Points Text */}
+              <span className="bg-[#BE4DFD] text-sm px-4 py-2 rounded-full">
                 0 Aura Points
-              </button>
+              </span>
   
               {/* Account Info */}
               <div className="flex items-center space-x-2">
