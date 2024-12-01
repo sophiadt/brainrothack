@@ -169,7 +169,6 @@ const Call = ({
                 style={{
                   maxWidth: "40rem",  // Adjust width as needed
                   margin: "0 auto",
-                  overflowY: "auto",   // Enables scrolling if content overflows
                   whiteSpace: "pre-wrap", // Ensures line breaks are respected
                   wordWrap: "break-word", // Prevents overflow of long words
                 }}
