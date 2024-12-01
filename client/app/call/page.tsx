@@ -86,7 +86,7 @@ export default function CallPage() {
         />
       </div>
 
-      <div className="mb-4 flex items-center space-x-6 justify-center">
+      <div className="mt-1 mb-4 flex items-center space-x-6 justify-center">
         <Call
           startCall={startCall}
           onAgentTalkingChange={handleAgentTalkingChange} // Pass the handler

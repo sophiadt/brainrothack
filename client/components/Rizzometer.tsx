@@ -4,7 +4,7 @@ import React from "react";
 
 const Rizzometer = ({ score }: { score: number }) => {
   return (
-    <div className="mb-12 text-center -mt-40 ">
+    <div className="mb-12 text-center">
       <h2 className="text-white font-semibold text-2xl mb-5">Rizz o'meter</h2>
       {/* Outer container for centering */}
       <div className="relative w-full max-w-5xl mx-auto">
