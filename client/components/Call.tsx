@@ -134,7 +134,7 @@ const Call = ({
           <p className="text-2xl text-green-500">Your Rizz Score: {rizzScore}</p>
           <Link href="/" passHref>
             <button className="bg-[#BE4DFD] hover:bg-[#CC72FF] text-white font-bold py-2 px-6 rounded-full mt-4">
-              Go Back to Homepage
+              Dare to Rizz Again?
             </button>
           </Link>
         </div>
