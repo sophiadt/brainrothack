@@ -1,13 +1,19 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import dotenv from "dotenv";
+// Load up env file which contains credentials
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
+
+import React, { useState, useEffect } from "react";
 import { RetellWebClient } from "retell-client-js-sdk";
 import Link from "next/link"; // Import the Link component
+import Retell from "retell-sdk"; // Import the Retell SDK
 
-const agentId = "agent_367bca6a3560b537e878082e49";
+const agentId = "agent_5e9cb4810e60247b0a957428ff";
 
 interface RegisterCallResponse {
   access_token: string;
+  call_id: string; // Add call_id to the response
 }
 
 const retellWebClient = new RetellWebClient();
@@ -21,41 +27,65 @@ const Call = ({
 }) => {
   const [isCalling, setIsCalling] = useState(false);
   const [showRizzScore, setShowRizzScore] = useState(false); // State to handle rizz score visibility
-  const [rizzScore, setRizzScore] = useState<number | null>(null); // Store the rizz score
-  const [loading, setLoading] = useState(true); // State for loading text
+  const [rizzMessage, setRizzMessage] = useState<string>(""); // Store rizz results message
+  const [loading, setLoading] = useState(false); // State for loading text
   const [showHangUpButton, setShowHangUpButton] = useState(false); // State to control visibility of Hang Up button
   const [showListeningText, setShowListeningText] = useState(false); // State to control visibility of the "Your alpha is listening..." text
   const [transcriptContent, setTranscriptContent] = useState<string>(""); // State to store the most recent transcript content
+  const [callId, setCallId] = useState<string>(""); // State to store the call_id after registering the call
+  const [isLoadingAnalysis, setIsLoadingAnalysis] = useState(false); // State to manage loading animation for the call analysis
 
-  // Initialize the SDK and start the call automatically
+  const retellClient = new Retell({
+    apiKey: "", // Fetch API key from environment variables
+  });
+
+  console.log("apikey", process.env.RETELL_API_KEY);
+
+  // Initialize the SDK and start the call manually
   useEffect(() => {
+    let callStarted = false; // To prevent duplicate calls
+
     const handleCall = async () => {
-      const registerCallResponse = await registerCall(agentId);
-      if (registerCallResponse.access_token) {
-        retellWebClient
-          .startCall({
+      if (callStarted) return; // Skip if already started
+      callStarted = true;
+
+      try {
+        const registerCallResponse = await registerCall(agentId);
+        if (registerCallResponse.access_token) {
+          await retellWebClient.startCall({
             accessToken: registerCallResponse.access_token,
-          })
-          .catch(console.error);
-        setIsCalling(true);
+          });
+          setIsCalling(true);
+
+          // Store the call_id so it can be used after the call ends
+          setCallId(registerCallResponse.call_id);
+        }
+      } catch (err) {
+        console.error("Error starting call:", err);
       }
     };
 
-    if (startCall) {
-      handleCall();
-    }
-
     retellWebClient.on("call_started", () => {
-      console.log("call started");
+      console.log("Call started");
     });
 
-    retellWebClient.on("call_ended", () => {
-      console.log("call ended");
+    retellWebClient.on("call_ended", async () => {
+      console.log("Call ended");
       setIsCalling(false);
       onAgentTalkingChange(false, ""); // Update agent talking state
-      setRizzScore(Math.floor(Math.random() * 100) + 1); // Example rizz score generation
       setShowRizzScore(true); // Show rizz score after the call ends
       setShowListeningText(false); // Hide "Your alpha is listening..." text after call ends
+
+      // After the call ends, fetch the call analysis using callId
+      if (callId) {
+        console.log("Fetching call analysis...", callId);
+
+        setIsLoadingAnalysis(true); // Start the loading animation
+        await delay(2000); // Delay before fetching analysis
+        const callAnalysis = await getCallAnalysis(callId);
+        setRizzMessage(callAnalysis); // Set rizz results
+        setIsLoadingAnalysis(false); // Stop the loading animation
+      }
     });
 
     retellWebClient.on("agent_start_talking", () => {
@@ -81,28 +111,32 @@ const Call = ({
       // Stop the call
       retellWebClient.stopCall();
     });
-  }, [startCall]);
+  }, [callId]);
 
   // Handle the loading state delay
   useEffect(() => {
-    if (startCall) {
+    if (isCalling) {
       const timer = setTimeout(() => {
-        setLoading(false); // Change loading text after 4 seconds
+        setLoading(false); // Change loading text after 0 seconds
         setShowListeningText(true); // Show the "Your alpha is listening..." text
-        setShowHangUpButton(true); // Show the "Hang Up" button after 4 seconds
-      }, 4000); // 4 second delay
+        setShowHangUpButton(true); // Show the "Hang Up" button after 0 seconds
+      }, 0); // 0 second delay
 
       return () => clearTimeout(timer);
     }
-  }, [startCall]);
+  }, [isCalling]);
 
   const toggleConversation = async () => {
     if (isCalling) {
       retellWebClient.stopCall();
+      setIsCalling(false);
+      setShowHangUpButton(false);
+      setShowListeningText(false);
     } else {
+      setLoading(true); // Show loading text immediately
       const registerCallResponse = await registerCall(agentId);
       if (registerCallResponse.access_token) {
-        retellWebClient
+        await retellWebClient
           .startCall({
             accessToken: registerCallResponse.access_token,
           })
@@ -125,14 +159,38 @@ const Call = ({
       });
 
       if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
+        throw new Error(`Server responded with status ${response.status}`);
       }
 
       const data: RegisterCallResponse = await response.json();
       return data;
     } catch (err) {
-      console.error("Error registering call:", err);
-      throw new Error("Failed to register call");
+      console.error("Error in registerCall function:", err.message);
+      throw new Error("Failed to register call: " + err.message);
+    }
+  }
+
+  // Fetch the call analysis using call_id after the call ends
+  async function getCallAnalysis(callId: string) {
+    try {
+      const response = await retellClient.call.retrieve(callId);
+
+      // Check if 'call_analysis' and 'custom_analysis_data' exist in the response
+      if (response.call_analysis && response.call_analysis.custom_analysis_data) {
+        const customAnalysisData = response.call_analysis.custom_analysis_data;
+
+        // Check if rizz_results is available
+        if (customAnalysisData.rizz_results) {
+          return customAnalysisData.rizz_results; // Return rizz_results
+        } else {
+          throw new Error("rizz_results not found in custom analysis data");
+        }
+      } else {
+        throw new Error("No call analysis or custom analysis data available");
+      }
+    } catch (err) {
+      console.error("Error fetching call analysis:", err);
+      return "Error retrieving rizz results"; // Return error message
     }
   }
 
@@ -140,7 +198,7 @@ const Call = ({
     <div>
       {showRizzScore ? (
         <div className="text-center mt-8">
-          <p className="text-2xl text-green-500">Your Rizz Score: {rizzScore}</p>
+          <p className="text-2xl text-white">Rizz Results: {rizzMessage}</p>
           <Link href="/" passHref>
             <button className="bg-[#BE4DFD] hover:bg-[#CC72FF] text-white font-bold py-2 px-6 rounded-full mt-4">
               End Gooning Session
@@ -149,6 +207,15 @@ const Call = ({
         </div>
       ) : (
         <div className="text-center">
+          {!isCalling && !loading && (
+            <button
+              onClick={toggleConversation}
+              className="bg-gray-700 hover:bg-gray-600 text-white font-bold px-6 py-3 mt-3 rounded-full"
+            >
+              Call Alpha
+            </button>
+          )}
+
           {loading && (
             <>
               <p className="text-lg mb-4 italic">Connecting to your alpha...</p>
@@ -167,7 +234,7 @@ const Call = ({
               <div
                 className="transcript-box"
                 style={{
-                  maxWidth: "40rem",  // Adjust width as needed
+                  maxWidth: "40rem", // Adjust width as needed
                   margin: "0 auto",
                   whiteSpace: "pre-wrap", // Ensures line breaks are respected
                   wordWrap: "break-word", // Prevents overflow of long words
@@ -185,6 +252,13 @@ const Call = ({
                 </button>
               )}
             </>
+          )}
+
+          {isLoadingAnalysis && (
+            <div className="spinner-container">
+              <div className="spinner"></div>
+              <p className="mt-4 text-lg">Fetching rizz results...</p>
+            </div>
           )}
         </div>
       )}
