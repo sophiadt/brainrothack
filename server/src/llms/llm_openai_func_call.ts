@@ -40,8 +40,8 @@ const rizzMechanics = `
 - Assign +10 to their "rizz score" for strong romantic efforts, clever flirtation, or "fire" responses.
 - Assign -10 for weak or "aids" attempts that lack charm or effort.
 - Track the "rizz score" cumulatively throughout the conversation.
-- If the caller's rizz score reaches **100 or above**, end the conversation with a playful and affectionate declaration of love.
-- If the rizz score drops to **0 or below**, end the conversation with playful disdain, making it clear they've failed.
+- If the caller's rizz score reaches 100 or above, end the conversation with a playful and affectionate declaration of love.
+- If the rizz score drops to 0 or below, end the conversation with playful disdain, making it clear they've failed.
 `;
 
 const agentPrompt = `
@@ -93,6 +93,7 @@ const responseGuideline = `
 
 const endingExamples = `
 ### Ending Messages:
+(Note: These are just examples—feel free to be creative with your ending messages)
 - [Positive Rizz Score (100 or above)]:
   - "Oh my, I didn't expect to fall for someone this hard… But here we are. Looks like you've won my heart entirely—I can't wait to see you soon!"
 - [Negative Rizz Score (0 or below)]:
@@ -213,7 +214,7 @@ export class FunctionCallingLlmClient {
           type: "function",
           function: {
             name: "end_call",
-            description: "End the call only when user explicitly requests it or when you feel you have been successfully rizzed or when the romance has failed miserably.",
+            description: "End the call only when the user explicitly requests it, when you feel you have been successfully rizzed, or when the romance has failed miserably. Conclude with a playful and affectionate declaration of love if the interaction is successful, or humorous disdain if the romance has failed. If the romance is failing, give them one or two more chances before ending the call.",
             parameters: {
               type: "object",
               properties: {

@@ -2,8 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import { RetellWebClient } from "retell-client-js-sdk";
+import "./Call.css";
 
-const agentId = "agent_88b28ca227d74c2fc74b776ad0";
+const agentId = "agent_367bca6a3560b537e878082e49";
 
 interface RegisterCallResponse {
   access_token: string;
@@ -11,7 +12,13 @@ interface RegisterCallResponse {
 
 const retellWebClient = new RetellWebClient();
 
-const Call = ({ startCall }: { startCall: boolean }) => {
+const Call = ({
+  startCall,
+  onAgentTalkingChange,
+}: {
+  startCall: boolean;
+  onAgentTalkingChange: (isTalking: boolean) => void;
+}) => {
   const [isCalling, setIsCalling] = useState(false);
 
   // Initialize the SDK and start the call automatically
@@ -39,26 +46,17 @@ const Call = ({ startCall }: { startCall: boolean }) => {
     retellWebClient.on("call_ended", () => {
       console.log("call ended");
       setIsCalling(false);
+      onAgentTalkingChange(false); // Update agent talking state
     });
 
     retellWebClient.on("agent_start_talking", () => {
       console.log("agent_start_talking");
+      onAgentTalkingChange(true); // Notify parent of talking state
     });
 
     retellWebClient.on("agent_stop_talking", () => {
       console.log("agent_stop_talking");
-    });
-
-    retellWebClient.on("audio", (audio) => {
-      // console.log(audio);
-    });
-
-    retellWebClient.on("update", (update) => {
-      // console.log(update);
-    });
-
-    retellWebClient.on("metadata", (metadata) => {
-      // console.log(metadata);
+      onAgentTalkingChange(false); // Notify parent of talking state
     });
 
     retellWebClient.on("error", (error) => {
@@ -109,12 +107,13 @@ const Call = ({ startCall }: { startCall: boolean }) => {
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <button onClick={toggleConversation} className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-full">
-          {isCalling ? "Hang Up" : "Calling your alpha..."}
-        </button>
-      </header>
+    <div>
+      <button
+        onClick={toggleConversation}
+        className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-full"
+      >
+        {isCalling ? "Hang Up" : "Calling your alpha..."}
+      </button>
     </div>
   );
 };
