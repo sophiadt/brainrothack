@@ -30,7 +30,9 @@ export default function CallPage() {
 
   return (
     <div className="relative bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold mb-4">Giga Chad Lv. 1</h1>
+      <h1 className="text-4xl mb-4">
+        <span className="font-extrabold">Giga Chad</span> Lv. 1
+      </h1>
       <div className="mt-8 mb-8">
         <img
           src="/assets/giga-chad.jpg"
