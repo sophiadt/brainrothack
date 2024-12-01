@@ -85,7 +85,7 @@ const Call = ({
       console.error("An error occurred:", error);
       retellWebClient.stopCall();
     });
-  }, [startCall]); // Only depends on startCall
+  }, [startCall]);
 
   // Handle the loading state delay and show listening text after startCall is true
   useEffect(() => {
@@ -104,18 +104,18 @@ const Call = ({
   useEffect(() => {
     const fetchAnalysis = async () => {
       if (callId && !isCalling) { // Check if the call has ended and the callId is set
-        setIsLoadingAnalysis(true);
+        setIsLoadingAnalysis(true); // Start loading animation
         await delay(5000); // Delay before fetching analysis
         const callAnalysis = await getCallAnalysis(callId);
         setRizzMessage(callAnalysis);
-        setIsLoadingAnalysis(false);
+        setIsLoadingAnalysis(false); // Stop loading animation
       }
     };
 
     if (callId && !isCalling) {
       fetchAnalysis();
     }
-  }, [callId, isCalling]); // Depends on callId and isCalling
+  }, [callId, isCalling]);
 
   const toggleConversation = async () => {
     if (isCalling) {
@@ -187,9 +187,35 @@ const Call = ({
     <div>
       {showRizzScore ? (
         <div className="text-center mt-8">
-          <p className="text-2xl text-green-500">Rizz Feedback: {rizzMessage}</p>
+          {isLoadingAnalysis ? (
+            // Show loading GIF while analysis is being fetched
+            <div className="spinner-container">
+              <img
+                src="/assets/queennevercry.gif"
+                alt="Queen never cry"
+                className="mx-auto w-60 h-60"
+              />
+              <p className="mt-4 text-lg italic">WARNING: Rizz results might make you cry<br />But queen never cry</p>
+            </div>
+          ) : (
+            // Show rizz results once it's ready
+            <div className="rizz-feedback-container">
+              <p className="text-5xl text-white font-bold mb-4">
+                Rizz Results
+              </p>
+              <div className="rizz-feedback-box bg-gray-800 px-6 py-4 rounded-2xl"
+                style={{
+                  maxWidth: "40rem",
+                  margin: "0 auto",
+                  whiteSpace: "pre-wrap",
+                  wordWrap: "break-word",
+                }}>
+                <p className="text-lg text-white">{rizzMessage}</p>
+              </div>
+            </div>
+          )}
           <Link href="/" passHref>
-            <button className="bg-[#BE4DFD] hover:bg-[#CC72FF] text-white font-bold py-2 px-6 rounded-full mt-4">
+            <button className="bg-[#BE4DFD] hover:bg-[#CC72FF] text-white py-2 px-6 rounded-full mt-8">
               End Gooning Session
             </button>
           </Link>
@@ -198,20 +224,20 @@ const Call = ({
         <div className="text-center">
           {loading && (
             <>
-              <p className="text-lg mb-4 italic">Connecting to your alpha...</p>
+              <p className="text-lg mb-4 italic">Connecting to Giga Chad...</p>
               <button
                 onClick={toggleConversation}
                 className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 mt-3 rounded-full"
               >
-                Calling your alpha...
+                Calling
               </button>
             </>
           )}
-
+  
           {showListeningText && !loading && (
             <>
               <div
-                className="transcript-box"
+                className="transcript-box text-center"
                 style={{
                   maxWidth: "40rem",
                   margin: "0 auto",
@@ -221,7 +247,7 @@ const Call = ({
               >
                 <p className="text-lg mb-4 italic">{transcriptContent || "Your alpha is listening..."}</p>
               </div>
-
+  
               {showHangUpButton && (
                 <button
                   onClick={toggleConversation}
@@ -232,7 +258,7 @@ const Call = ({
               )}
             </>
           )}
-
+  
           {isLoadingAnalysis && (
             <div className="spinner-container">
               <div className="spinner"></div>
