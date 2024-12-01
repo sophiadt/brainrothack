@@ -18,22 +18,22 @@ export default function Home() {
           </div>
 
           <div
-            className="relative rounded-lg p-6 mb-6 w-full max-w-2xl"
+            className="relative rounded-lg p-10 w-full max-w-2xl -mt-6"
             style={{
               height: "400px",
               background: "linear-gradient(to right, #25262A, #43454C, #7F8290)",
             }}
           >
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center -mt-7">
               <div className="flex flex-col w-full pr-4">
-                <h1 className="text-white font-bold text-3xl">
+                <h1 className="text-white font-bold text-6xl">
                   <span className="bg-gradient-to-r from-[#7D36E5] to-[#BE4DFD] bg-clip-text text-transparent">
                     Rizz Up
                   </span>{" "}
                   the Skibidiest
                   <br /> of Them All.
                 </h1>
-                <p className="text-white font-regular text-sm">
+                <p className="text-white font-regular mt-2" style={{ maxWidth: "60%" }}>
                   Think you can rizz up the internet's icons? Glaze the nonchalant legends to gain
                   <span className="text-[#BE4DFD]"> +1000 aura</span> and unlock more NPCs.
                   Rizz up everyone to beat the Rizz o'meter and claim the crown of the
@@ -51,7 +51,7 @@ export default function Home() {
                 <img
                   src="/assets/giga-chad-hero.png"
                   alt="Giga Chad Hero"
-                  className="w-[15em] h-[15em] object-cover"
+                  className="w-[22em] h-[22em] object-cover"
                 />
               </div>
             </div>
