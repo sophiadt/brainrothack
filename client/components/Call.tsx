@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { RetellWebClient } from "retell-client-js-sdk";
-import "./Call.css";
 
 const agentId = "agent_367bca6a3560b537e878082e49";
 
@@ -20,6 +19,8 @@ const Call = ({
   onAgentTalkingChange: (isTalking: boolean) => void;
 }) => {
   const [isCalling, setIsCalling] = useState(false);
+  const [showRizzScore, setShowRizzScore] = useState(false); // State to handle rizz score visibility
+  const [rizzScore, setRizzScore] = useState<number | null>(null); // Store the rizz score
 
   // Initialize the SDK and start the call automatically
   useEffect(() => {
@@ -47,6 +48,8 @@ const Call = ({
       console.log("call ended");
       setIsCalling(false);
       onAgentTalkingChange(false); // Update agent talking state
+      setRizzScore(Math.floor(Math.random() * 100) + 1); // Example rizz score generation
+      setShowRizzScore(true); // Show rizz score after the call ends
     });
 
     retellWebClient.on("agent_start_talking", () => {
@@ -82,6 +85,10 @@ const Call = ({
     }
   };
 
+  const handleGoHomeClick = () => {
+    window.location.href = "/"; // Redirect to the homepage
+  };
+
   async function registerCall(agentId: string): Promise<RegisterCallResponse> {
     try {
       const response = await fetch("/api/create-web-call", {
@@ -108,12 +115,26 @@ const Call = ({
 
   return (
     <div>
-      <button
-        onClick={toggleConversation}
-        className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-full"
-      >
-        {isCalling ? "Hang Up" : "Calling your alpha..."}
-      </button>
+      {showRizzScore ? (
+        <div className="text-center mt-8">
+          <p className="text-2xl text-green-500">Your Rizz Score: {rizzScore}</p>
+          <button
+            onClick={handleGoHomeClick}
+            className="mt-4 bg-blue-500 hover:bg-blue-400 text-white px-6 py-3 rounded-full"
+          >
+            Go Back to Homepage
+          </button>
+        </div>
+      ) : (
+        <div className="text-center">
+          <button
+            onClick={toggleConversation}
+            className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-full"
+          >
+            {isCalling ? "Hang Up" : "Calling your alpha..."}
+          </button>
+        </div>
+      )}
     </div>
   );
 };
