@@ -1,3 +1,7 @@
+import dotenv from "dotenv";
+// Load up env file which contains credentials
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
+
 import React, { useEffect, useState } from "react";
 import { RetellWebClient } from "retell-client-js-sdk";
 import Link from "next/link";
@@ -32,6 +36,8 @@ const Call = ({
   const retellClient = new Retell({
     apiKey: "",
   });
+
+  console.log("apiKey", retellClient.apiKey);
 
   // Handle start call and register the call
   useEffect(() => {
