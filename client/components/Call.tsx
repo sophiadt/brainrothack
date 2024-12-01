@@ -70,8 +70,6 @@ const Call = ({
 
     // Update message such as transcript
     retellWebClient.on("update", (update) => {
-      // console.log(update);
-      // Update the transcript content with the latest sentence from the agent's response
       if (update.transcript.length > 0) {
         const latestContent = update.transcript[update.transcript.length - 1]?.content;
         setTranscriptContent(latestContent);
@@ -165,7 +163,20 @@ const Call = ({
 
           {showListeningText && !loading && (
             <>
-              <p className="text-lg mb-4 italic">{transcriptContent || "Your alpha is listening..."}</p>
+              {/* Transcript Box with fixed size */}
+              <div
+                className="transcript-box"
+                style={{
+                  maxWidth: "40rem",  // Adjust width as needed
+                  margin: "0 auto",
+                  overflowY: "auto",   // Enables scrolling if content overflows
+                  whiteSpace: "pre-wrap", // Ensures line breaks are respected
+                  wordWrap: "break-word", // Prevents overflow of long words
+                }}
+              >
+                <p className="text-lg mb-4 italic">{transcriptContent || "Your alpha is listening..."}</p>
+              </div>
+
               {showHangUpButton && (
                 <button
                   onClick={toggleConversation}
