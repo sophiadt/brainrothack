@@ -78,10 +78,10 @@ const Call = ({
   useEffect(() => {
     if (startCall) {
       const timer = setTimeout(() => {
-        setLoading(false); // Change loading text after 2 seconds
+        setLoading(false); // Change loading text after 4 seconds
         setShowListeningText(true); // Show the "Your alpha is listening..." text
-        setShowHangUpButton(true); // Show the "Hang Up" button after 2 seconds
-      }, 2000); // Adjust the delay as needed
+        setShowHangUpButton(true); // Show the "Hang Up" button after 4 seconds
+      }, 4000); // 4 second delay
 
       return () => clearTimeout(timer);
     }
@@ -142,10 +142,10 @@ const Call = ({
         <div className="text-center">
           {loading && (
             <>
-              <p className="text-lg mb-4">Connecting to your alpha...</p>
+              <p className="text-lg mb-4 italic">Connecting to your alpha...</p>
               <button
                 onClick={toggleConversation}
-                className="bg-[#BE4DFD] hover:bg-[#CC72FF] text-white font-bold py-2 px-6 rounded-full mt-4"
+                className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 mt-3 rounded-full"
               >
                 Calling your alpha...
               </button>
@@ -154,11 +154,11 @@ const Call = ({
 
           {showListeningText && !loading && (
             <>
-              <p className="text-lg mb-4">Your alpha is listening...</p>
+              <p className="text-lg mb-4 italic">Your alpha is listening...</p>
               {showHangUpButton && (
                 <button
                   onClick={toggleConversation}
-                  className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-full"
+                  className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 mt-3 rounded-full"
                 >
                   Hang Up
                 </button>
