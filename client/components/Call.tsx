@@ -140,19 +140,30 @@ const Call = ({
         </div>
       ) : (
         <div className="text-center">
-          {loading ? (
-            <p className="text-lg mb-4">Connecting to your alpha...</p>
-          ) : (
-            showListeningText && <p className="text-lg mb-4">Your alpha is listening...</p>
+          {loading && (
+            <>
+              <p className="text-lg mb-4">Connecting to your alpha...</p>
+              <button
+                onClick={toggleConversation}
+                className="bg-[#BE4DFD] hover:bg-[#CC72FF] text-white font-bold py-2 px-6 rounded-full mt-4"
+              >
+                Calling your alpha...
+              </button>
+            </>
           )}
 
-          {showHangUpButton && (
-            <button
-              onClick={toggleConversation}
-              className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-full"
-            >
-              {isCalling ? "Hang Up" : "Calling your alpha..."}
-            </button>
+          {showListeningText && !loading && (
+            <>
+              <p className="text-lg mb-4">Your alpha is listening...</p>
+              {showHangUpButton && (
+                <button
+                  onClick={toggleConversation}
+                  className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-full"
+                >
+                  Hang Up
+                </button>
+              )}
+            </>
           )}
         </div>
       )}
