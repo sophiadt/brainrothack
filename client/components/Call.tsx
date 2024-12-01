@@ -193,7 +193,7 @@ const Call = ({
               <img
                 src="/assets/queennevercry.gif"
                 alt="Queen never cry"
-                className="mx-auto w-60 h-60"
+                className="mx-auto w-auto h-60"
               />
               <p className="mt-4 text-lg italic">WARNING: Rizz results might make you cry<br />But queen never cry</p>
             </div>
@@ -245,7 +245,7 @@ const Call = ({
                   wordWrap: "break-word",
                 }}
               >
-                <p className="text-lg mb-4 italic">{transcriptContent || "Your alpha is listening..."}</p>
+                <p className="text-lg mb-4 italic">{transcriptContent || "Giga Chad is about to grace you with his presence"}</p>
               </div>
   
               {showHangUpButton && (
