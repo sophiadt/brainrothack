@@ -15,9 +15,19 @@ npm run dev
 ### Get Local Webhook Endpoint Online
 Install ngrok
 
+Add your authtoken to the default ngrok.yml configuration file
+
+`ngrok config add-authtoken YOUR_AUTH_TOKEN`
+
 Start ngrok
 
+Either your ephemeral domain
+
 `ngrok http http://localhost:8080`
+
+Or your static domain
+
+`ngrok http --url=YOUR_STATIC_DOMAIN_NAME.ngrok-free.app 8080`
 
 Get endpoint here (example)
 
