@@ -43,6 +43,8 @@ Put it in Retell Custom LLM dashboard like this
 ### Environment Variables
 Make two `.env.development` files and put each in the same level as the `package.json` in the `client` and `server` folders.
 
+Run `npm install dotenv`
+
 Put this in the file
 ```shell
 OPENAI_ORGANIZATION_ID=""
