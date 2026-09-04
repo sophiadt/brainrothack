@@ -48,7 +48,7 @@ Run `npm install dotenv`
 Put this in the file
 ```shell
 OPENAI_ORGANIZATION_ID=""
-OPENAI_APIKEY=""
+OPENAI_API_KEY=""
 
 TWILIO_ACCOUNT_ID="" # optional
 TWILIO_AUTH_TOKEN="" # optional

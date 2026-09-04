@@ -1,8 +1,5 @@
 // app/api/analyze-proficiency/route.ts
 
-import dotenv from "dotenv";
-// Load up env file which contains credentials
-dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
 import { NextResponse } from "next/server";
 import { OpenAI } from "openai"; // Assuming you're using the `openai` package

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { RetellWebClient } from "retell-client-js-sdk";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -36,6 +36,20 @@ const Call = ({
   const [isLoadingAnalysis, setIsLoadingAnalysis] = useState(false);
   const router = useRouter();
 
+  // The Retell listeners below are registered once and then read these values
+  // whenever they fire. Refs keep them current without re-registering the
+  // listeners on every render (and without capturing a stale transcript).
+  const onAgentTalkingChangeRef = useRef(onAgentTalkingChange);
+  const transcriptContentRef = useRef(transcriptContent);
+
+  useEffect(() => {
+    onAgentTalkingChangeRef.current = onAgentTalkingChange;
+  }, [onAgentTalkingChange]);
+
+  useEffect(() => {
+    transcriptContentRef.current = transcriptContent;
+  }, [transcriptContent]);
+
   // Handle start call and register the call
   useEffect(() => {
     const handleCall = async () => {
@@ -64,19 +78,19 @@ const Call = ({
     retellWebClient.on("call_ended", async () => {
       console.log("call ended");
       setIsCalling(false);
-      onAgentTalkingChange(false, "");
+      onAgentTalkingChangeRef.current(false, "");
       setShowRizzScore(true);
       setShowListeningText(false);
     });
 
     retellWebClient.on("agent_start_talking", () => {
       console.log("agent_start_talking");
-      onAgentTalkingChange(true, transcriptContent);
+      onAgentTalkingChangeRef.current(true, transcriptContentRef.current);
     });
 
     retellWebClient.on("agent_stop_talking", () => {
       console.log("agent_stop_talking");
-      onAgentTalkingChange(false, "");
+      onAgentTalkingChangeRef.current(false, "");
     });
 
     retellWebClient.on("update", (update) => {
