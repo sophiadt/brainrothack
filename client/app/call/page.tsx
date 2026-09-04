@@ -1,42 +1,41 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Call from "@/components/Call";
+import dynamic from "next/dynamic";
+import Image from "next/image";
 import Rizzometer from "@/components/Rizzometer";
 
-// Function to analyze the Rizz
+// The Retell web SDK is ~95kB and is only needed once the call UI mounts.
+// Loading it lazily lets the page paint immediately.
+const Call = dynamic(() => import("@/components/Call"), {
+  ssr: false,
+  loading: () => (
+    <p className="text-lg mb-4 italic">Connecting to Giga Chad...</p>
+  ),
+});
+
+// Ask the server to score the transcript. The OpenAI key lives in the route,
+// never in the browser bundle.
 const analyzeRizz = async (userTranscript: string) => {
-  const API_KEY = 'your-api-key'; // Insert your OpenAI API key here
-  console.log("User transcript:", userTranscript);
-
-  const prompt = `Your prompt text...`;
-
   try {
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
+    const res = await fetch("/api/analyze-rizz", {
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${API_KEY}`,
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        model: "gpt-4",
-        messages: [
-          { role: "system", content: prompt },
-          { role: "user", content: userTranscript },
-        ],
-      }),
+      body: JSON.stringify({ transcript: userTranscript }),
     });
 
+    const data = await res.json();
+
     if (!res.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error(data.error || `Error: ${res.status}`);
     }
 
-    const data = await res.json();
-    console.log("OpenAI response:", data);
-    const score = parseInt(data.choices[0].message.content.trim(), 10);
-    return score;
+    return typeof data.score === "number" ? data.score : 0;
   } catch (error) {
-    console.error("Error fetching data from OpenAI:", error);
+    // Scoring is a nice-to-have; the demo keeps running without it.
+    console.error("Error analyzing rizz:", error);
     return 0;
   }
 };
@@ -51,17 +50,14 @@ export default function CallPage() {
   }, []);
 
   // Function to update the agent talking state and analyze rizz
-  const handleAgentTalkingChange = async (isTalking: boolean, updateObject: any) => {
+  const handleAgentTalkingChange = async (isTalking: boolean, userTranscript: string) => {
     setIsAgentTalking(isTalking);
-
-    // Get the user's transcript from the updateObject
-    const userTranscript = updateObject.transcript?.find((item: any) => item.role === 'user')?.content;
 
     // Ensure userTranscript exists before analyzing
     if (isTalking && userTranscript) {
-      console.log("Analyzing user transcript:", userTranscript);
-      let score = await analyzeRizz(userTranscript);
-      setRizzScore((prevScore) => prevScore + score);
+      const score = await analyzeRizz(userTranscript);
+      // Keep the meter inside 0-100 so the bar can't overflow its track.
+      setRizzScore((prevScore) => Math.min(100, Math.max(0, prevScore + score)));
     }
   };
 
@@ -77,9 +73,12 @@ export default function CallPage() {
 
       {/* Centered image */}
       <div className="flex justify-center mt-8 mb-8">
-        <img
+        <Image
           src="/assets/giga-chad.jpg"
           alt="Giga Chad Front Profile"
+          width={240}
+          height={240}
+          priority
           className={`w-60 h-60 rounded-full object-cover object-center transition-all duration-300 ${
             isAgentTalking ? "glow-border" : ""
           }`}

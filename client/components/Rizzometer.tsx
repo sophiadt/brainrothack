@@ -1,11 +1,12 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 
 const Rizzometer = ({ score }: { score: number }) => {
   return (
     <div className="mb-12 text-center">
-      <h2 className="text-white font-semibold text-2xl mb-5">Rizz o'meter</h2>
+      <h2 className="text-white font-semibold text-2xl mb-5">Rizz o&apos;meter</h2>
       {/* Outer container for centering */}
       <div className="relative w-full max-w-5xl mx-auto">
         {/* Progress bar container with full width */}
@@ -16,32 +17,42 @@ const Rizzometer = ({ score }: { score: number }) => {
             style={{ width: `${score}%` }}
           ></div>
         </div>
-        
+
         {/* Icon container, positioned absolutely to avoid affecting the bar width */}
         <div className="absolute inset-0 flex justify-between items-center -top-4">
-          <img
+          <Image
             src="/assets/gooner.png"
             alt="Gooner"
+            width={64}
+            height={44}
             className="w-16 h-11 rounded-full transform translate-y-[2px]"
           />
-          <img
+          <Image
             src="/assets/omega.png"
             alt="Omega"
+            width={44}
+            height={44}
             className="w-11 h-11 rounded-full transform translate-y-[2px]"
           />
-          <img
+          <Image
             src="/assets/beta.png"
             alt="Beta"
+            width={44}
+            height={44}
             className="w-11 h-11 rounded-full transform translate-y-[2px]"
           />
-          <img
+          <Image
             src="/assets/alpha.png"
             alt="Alpha"
+            width={48}
+            height={48}
             className="w-13 h-12 rounded-full transform translate-y-[2px]"
           />
-          <img
+          <Image
             src="/assets/rizzlr.png"
             alt="Rizzlr"
+            width={36}
+            height={44}
             className="w-9 h-11 rounded-full transform translate-y-[2px]"
           />
         </div>

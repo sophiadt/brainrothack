@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Image from "next/image";
 import "./globals.css";
 
 const poppins = localFont({
@@ -50,23 +51,28 @@ export default function RootLayout({
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             {/* Logo Section */}
             <div className="flex items-center space-x-2">
-              <img
+              <Image
                 src="/assets/rizzlr.png"
                 alt="Rizzlr Logo"
+                width={32}
+                height={40}
                 className="w-8 h-10"
+                priority
               />
               <h1 className="text-lg font-bold bg-gradient-to-r from-[#7D36E5] to-[#BE4DFD] bg-clip-text text-transparent">
                 Rizzlr.ai
               </h1>
             </div>
-  
+
             {/* Search Bar */}
             <nav className="absolute left-1/2 transform -translate-x-1/2 w-96">
               <div className="relative flex items-center">
                 {/* Magnifying Glass Icon */}
-                <img
+                <Image
                   src="/assets/magnifying-glass.png"
                   alt="Search Icon"
+                  width={16}
+                  height={16}
                   className="absolute left-3 w-4 h-4"
                 />
                 {/* Search Input */}
@@ -77,28 +83,32 @@ export default function RootLayout({
                 />
               </div>
             </nav>
-  
+
             {/* Right Section: Aura Points and Account Info */}
             <div className="flex items-center space-x-4">
               {/* Aura Points Text */}
               <span className="bg-[#BE4DFD] text-sm px-4 py-2 rounded-full">
                 0 Aura Points
               </span>
-  
+
               {/* Account Info */}
               <div className="flex items-center space-x-2">
                 {/* Profile Picture */}
-                <img
+                <Image
                   src="/assets/professional-gooner-pfp.jpg"
                   alt="Profile"
+                  width={32}
+                  height={32}
                   className="w-8 h-8 rounded-full"
                 />
                 {/* Username */}
                 <span className="text-sm font-medium">professionalgooner</span>
                 {/* Dropdown Arrow */}
-                <img
+                <Image
                   src="/assets/arrow.png"
                   alt="Dropdown Arrow"
+                  width={28}
+                  height={16}
                   className="w-7 h-4"
                 />
               </div>

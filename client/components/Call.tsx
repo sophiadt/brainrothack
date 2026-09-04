@@ -1,13 +1,15 @@
-import dotenv from "dotenv";
-// Load up env file which contains credentials
-dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
+"use client";
 
 import React, { useEffect, useState } from "react";
 import { RetellWebClient } from "retell-client-js-sdk";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
-import Retell from "retell-sdk";
 
 const agentId = "agent_5e9cb4810e60247b0a957428ff";
+
+// How long the "Connecting to Giga Chad..." beat lasts before the call UI shows.
+const CONNECTING_MS = 800;
 
 interface RegisterCallResponse {
   access_token: string;
@@ -32,12 +34,7 @@ const Call = ({
   const [transcriptContent, setTranscriptContent] = useState<string>("");
   const [callId, setCallId] = useState<string>("");
   const [isLoadingAnalysis, setIsLoadingAnalysis] = useState(false);
-
-  const retellClient = new Retell({
-    apiKey: "",
-  });
-
-  console.log("apiKey", retellClient.apiKey);
+  const router = useRouter();
 
   // Handle start call and register the call
   useEffect(() => {
@@ -55,7 +52,9 @@ const Call = ({
     };
 
     if (startCall) {
-      handleCall();
+      // The call may fail to register (e.g. no Retell credentials); the page
+      // should still render its UI rather than blow up on an unhandled rejection.
+      handleCall().catch(console.error);
     }
 
     retellWebClient.on("call_started", () => {
@@ -91,6 +90,13 @@ const Call = ({
       console.error("An error occurred:", error);
       retellWebClient.stopCall();
     });
+
+    // retellWebClient is a module-level singleton, so listeners would otherwise
+    // stack up on every mount. Also releases the microphone on navigate away.
+    return () => {
+      retellWebClient.removeAllListeners();
+      retellWebClient.stopCall();
+    };
   }, [startCall]);
 
   // Handle the loading state delay and show listening text after startCall is true
@@ -100,7 +106,7 @@ const Call = ({
         setLoading(false);
         setShowListeningText(true);
         setShowHangUpButton(true);
-      }, 4000);
+      }, CONNECTING_MS);
 
       return () => clearTimeout(timer);
     }
@@ -126,7 +132,10 @@ const Call = ({
   const toggleConversation = async () => {
     if (isCalling) {
       retellWebClient.stopCall();
-    } else {
+      return;
+    }
+
+    try {
       const registerCallResponse = await registerCall(agentId);
       if (registerCallResponse.access_token) {
         retellWebClient
@@ -136,7 +145,15 @@ const Call = ({
           .catch(console.error);
         setIsCalling(true);
       }
+    } catch (err) {
+      console.error(err);
     }
+  };
+
+  // Hang Up ends the call and returns to the home page.
+  const handleHangUp = () => {
+    retellWebClient.stopCall();
+    router.push("/");
   };
 
   const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -172,17 +189,21 @@ const Call = ({
 
   async function getCallAnalysis(callId: string) {
     try {
-      const response = await retellClient.call.retrieve(callId);
-      if (response.call_analysis && response.call_analysis.custom_analysis_data) {
-        const customAnalysisData = response.call_analysis.custom_analysis_data;
-        if (customAnalysisData.rizz_results) {
-          return customAnalysisData.rizz_results;
-        } else {
-          throw new Error("rizz_results not found in custom analysis data");
-        }
-      } else {
-        throw new Error("No call analysis or custom analysis data available");
+      const response = await fetch("/api/get-call-analysis", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ call_id: callId }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || `Error: ${response.status}`);
       }
+
+      return String(data.rizz_results);
     } catch (err) {
       console.error("Error fetching call analysis:", err);
       return "Error retrieving rizz results";
@@ -196,10 +217,13 @@ const Call = ({
           {isLoadingAnalysis ? (
             // Show loading GIF while analysis is being fetched
             <div className="spinner-container">
-              <img
+              <Image
                 src="/assets/queennevercry.gif"
                 alt="Queen never cry"
+                width={240}
+                height={240}
                 className="mx-auto w-auto h-60"
+                unoptimized
               />
               <p className="mt-4 text-lg italic">WARNING: Rizz results might make you cry<br />But queen never cry</p>
             </div>
@@ -256,7 +280,7 @@ const Call = ({
   
               {showHangUpButton && (
                 <button
-                  onClick={toggleConversation}
+                  onClick={handleHangUp}
                   className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 mt-3 rounded-full"
                 >
                   Hang Up

@@ -1,6 +1,6 @@
 import Hero from "@/components/Hero";
-import Call from "../components/Call";
 import Link from "next/link";
+import Image from "next/image";
 import Card from "@/components/Card";
 
 export default function Home() {
@@ -10,10 +10,13 @@ export default function Home() {
         <div className="flex justify-center items-center space-x-4">
           <Hero />
           <div className="flex-1 pt-8">
-            <img
+            <Image
               src="/assets/subway-surfer.gif"
               alt="Subway Surfer GIF"
+              width={271}
+              height={455}
               className="w-[271px] h-[455px] rounded-lg"
+              unoptimized
             />
           </div>
 
@@ -34,9 +37,9 @@ export default function Home() {
                   <br /> of Them All.
                 </h1>
                 <p className="text-white font-regular mt-2" style={{ maxWidth: "60%" }}>
-                  Think you can rizz up the internet's icons? Glaze the nonchalant legends to gain
+                  Think you can rizz up the internet&apos;s icons? Glaze the nonchalant legends to gain
                   <span className="text-[#BE4DFD]"> +1000 aura</span> and unlock more NPCs.
-                  Rizz up everyone to beat the Rizz o'meter and claim the crown of the
+                  Rizz up everyone to beat the Rizz o&apos;meter and claim the crown of the
                   <span className="text-[#BE4DFD]"> Rizzlr</span>. Hawk tuah!
                 </p>
 
@@ -48,20 +51,26 @@ export default function Home() {
               </div>
 
               <div className="absolute bottom-0 right-0">
-                <img
+                <Image
                   src="/assets/giga-chad-hero.png"
                   alt="Giga Chad Hero"
+                  width={352}
+                  height={352}
                   className="w-[22em] h-[22em] object-cover"
+                  priority
                 />
               </div>
             </div>
           </div>
 
           <div className="flex-1 pt-8">
-            <img
+            <Image
               src="/assets/minecraft-parkour.gif"
               alt="Right GIF"
+              width={271}
+              height={455}
               className="w-[271px] h-[455px] rounded-lg"
+              unoptimized
             />
           </div>
         </div>
@@ -74,29 +83,39 @@ export default function Home() {
             </div>
 
             <div className="absolute inset-0 flex justify-between items-center -top-4">
-              <img
+              <Image
                 src="/assets/gooner.png"
                 alt="Gooner"
+                width={64}
+                height={44}
                 className="w-16 h-11 rounded-full transform translate-y-[2px]"
               />
-              <img
+              <Image
                 src="/assets/omega.png"
                 alt="Omega"
+                width={44}
+                height={44}
                 className="w-11 h-11 rounded-full transform translate-y-[2px]"
               />
-              <img
+              <Image
                 src="/assets/beta.png"
                 alt="Beta"
+                width={44}
+                height={44}
                 className="w-11 h-11 rounded-full transform translate-y-[2px]"
               />
-              <img
+              <Image
                 src="/assets/alpha.png"
                 alt="Alpha"
+                width={48}
+                height={48}
                 className="w-13 h-12 rounded-full transform translate-y-[2px]"
               />
-              <img
+              <Image
                 src="/assets/rizzlr.png"
                 alt="Rizzlr"
+                width={36}
+                height={44}
                 className="w-9 h-11 rounded-full transform translate-y-[2px]"
               />
             </div>
@@ -113,20 +132,29 @@ export default function Home() {
 
         <div className="flex justify-center mt-10">
           <div className="flex flex-col items-center">
-            <img
+            <Image
               src="/assets/chad-mewing.gif"
               alt="Chad Mewing"
+              width={200}
+              height={250}
               className="w-[200px] h-[250px] rounded-lg mb-4"
+              unoptimized
             />
-            <img
+            <Image
               src="/assets/barron-trump.gif"
               alt="Barron Trump"
+              width={200}
+              height={200}
               className="w-[200px] h-[200px] rounded-lg"
+              unoptimized
             />
-            <img
+            <Image
               src="/assets/alpha-wolf.gif"
               alt="alpha"
+              width={200}
+              height={400}
               className="w-[200px] h-[400px] rounded-lg"
+              unoptimized
             />
           </div>
           <div className="flex flex-col mx-4">
@@ -177,20 +205,29 @@ export default function Home() {
             </div>
           </div>
           <div className="flex flex-col items-center">
-            <img
+            <Image
               src="/assets/don-pollo.gif"
               alt="Don Pollo"
+              width={200}
+              height={200}
               className="w-[200px] h-[200px] rounded-lg mb-4"
+              unoptimized
             />
-            <img
+            <Image
               src="/assets/joker-sigma.gif"
               alt="Joker Sigma"
+              width={200}
+              height={290}
               className="w-[200px] h-[290px] rounded-lg"
+              unoptimized
             />
-            <img
+            <Image
               src="/assets/amogus.gif"
               alt="sussy baka"
+              width={200}
+              height={400}
               className="w-[200px] h-[400px] rounded-lg"
+              unoptimized
             />
           </div>
         </div>

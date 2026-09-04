@@ -48,10 +48,11 @@ export async function POST(request: Request) {
     const responseContent = completion.choices[0]?.message?.content || "";
 
     return NextResponse.json({ content: responseContent });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("OpenAI API error:", error);
+    const message = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: `OpenAI API error: ${error.message}` },
+      { error: `OpenAI API error: ${message}` },
       { status: 500 }
     );
   }

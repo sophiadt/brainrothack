@@ -1,4 +1,6 @@
 import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import './Card.css';
 
 interface CardProps {
@@ -12,7 +14,15 @@ interface CardProps {
 const Card: React.FC<CardProps> = ({ imageSrc, title, description, tags, disabled = false }) => {
   return (
     <div className="card">
-      <img className="card-image" src={imageSrc} alt={title} />
+      {/* Card art is 446x344; .card-image keeps it fluid with height: auto. */}
+      <Image
+        className="card-image"
+        src={imageSrc}
+        alt={title}
+        width={446}
+        height={344}
+        sizes="210px"
+      />
       <h2 className="card-title">{title}</h2>
 
       <div className="pill-container">
@@ -23,15 +33,17 @@ const Card: React.FC<CardProps> = ({ imageSrc, title, description, tags, disable
 
       <p className="card-text">{description}</p>
 
-      <a href={disabled ? undefined : "/call"}>
-        <button className={`card-call ${disabled ? 'disabled' : ''}`} disabled={disabled}>
-          {disabled ? '10000 Aura Points' : 'Call'}
+      {disabled ? (
+        <button className="card-call disabled" disabled>
+          10000 Aura Points
         </button>
-      </a>
+      ) : (
+        <Link href="/call">
+          <button className="card-call">Call</button>
+        </Link>
+      )}
     </div>
   );
 };
 
 export default Card;
-
-
